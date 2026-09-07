@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sex Stats — GPS vest &amp; performance band</title>
+<meta name="description" content="Measure your field data, compare it to the level above, and close the gap. GPS vest SX-V1 and band SX-B1. Pre-order open.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  
+  :root{
+    --noir:#040404;--craie:#F5F5F5;--acier:#8C8C8C;--filet:rgba(255,255,255,.15);
+    --verre:rgba(255,255,255,.06);--verre-haut:rgba(255,255,255,.19);
+    --display:'Archivo','Arial Narrow',Impact,sans-serif;
+    --body:'Archivo',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+    --pad:clamp(1.25rem,5vw,4.5rem);--max:1240px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{background:var(--noir);color:var(--craie);font-family:var(--body);line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  body.locked{overflow:hidden}
+  ::selection{background:var(--craie);color:var(--noir)}
+  :focus-visible{outline:2px solid var(--craie);outline-offset:3px;border-radius:3px}
+  img,svg{display:block;max-width:100%}
+  button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+
+  .rings{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .rings i{position:absolute;border-radius:50%;filter:blur(30px)}
+  .rings i:nth-child(1){width:min(360px,46vw);aspect-ratio:1;top:-8vh;left:-6vw;background:radial-gradient(circle,transparent 36%,rgba(255,255,255,.40) 47%,rgba(255,255,255,.09) 58%,transparent 68%)}
+  .rings i:nth-child(2){width:min(210px,26vw);aspect-ratio:1;top:12vh;left:9vw;background:radial-gradient(circle,transparent 38%,rgba(255,255,255,.26) 50%,transparent 64%)}
+  .rings i:nth-child(3){width:min(430px,54vw);aspect-ratio:1;top:62vh;right:-9vw;background:radial-gradient(circle,transparent 36%,rgba(255,255,255,.36) 47%,rgba(255,255,255,.09) 58%,transparent 68%)}
+  .rings i:nth-child(4){width:min(600px,80vw);aspect-ratio:1;top:26vh;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(255,255,255,.07),transparent 62%);filter:blur(70px)}
+  .rings i:nth-child(5){width:min(500px,70vw);aspect-ratio:1;bottom:-10vh;left:6vw;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 64%);filter:blur(70px)}
+
+  .layer{position:relative;z-index:1}
+  .wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--pad)}
+  section{padding-block:clamp(3.25rem,8vw,7rem)}
+
+  .mono{font-family:var(--mono);font-size:.6875rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase}
+  .glass{background:var(--verre);backdrop-filter:blur(26px) saturate(0);-webkit-backdrop-filter:blur(26px) saturate(0);
+         border:1px solid var(--filet);border-radius:16px;box-shadow:inset 0 1px 0 var(--verre-haut),0 24px 60px rgba(0,0,0,.55)}
+  @supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){.glass{background:rgba(18,18,18,.94)}}
+
+  .head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;border-top:1px solid rgba(255,255,255,.55);padding:.6rem 0 .5rem;margin-bottom:clamp(1.5rem,4vw,2.75rem)}
+  .head span:last-child{color:var(--acier);text-align:right}
+  h2.big{font-family:var(--display);font-variation-settings:'wdth' 62,'wght' 900;font-weight:900;text-transform:uppercase;font-size:clamp(2.1rem,7.5vw,4.75rem);line-height:.92;letter-spacing:-.015em;margin-bottom:1rem}
+  .lede{font-size:clamp(1.0625rem,2.3vw,1.35rem);line-height:1.42;max-width:46ch}
+  .note{font-size:.875rem;line-height:1.55;color:var(--acier);max-width:56ch}
+  .two-col{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:clamp(1.5rem,4vw,3rem);align-items:start}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-family:var(--mono);font-size:.6875rem;font-weight:600;
+       letter-spacing:.16em;text-transform:uppercase;padding:1rem 1.4rem;border-radius:10px;border:1px solid var(--craie);
+       background:var(--craie);color:var(--noir);cursor:pointer;text-decoration:none;transition:transform .18s ease,opacity .18s ease;text-align:center}
+  .btn:hover{transform:translateY(-1px);opacity:.88}
+  .btn:disabled{opacity:.5;cursor:default;transform:none}
+  .btn.ghost{background:transparent;color:var(--craie);border-color:var(--filet)}
+  .btn.ghost:hover{border-color:var(--craie)}
+
+  .cell{position:relative;aspect-ratio:1;background:var(--craie);border-radius:22%;overflow:hidden;flex:none}
+  .cell::after{content:'';position:absolute;inset:0;background:linear-gradient(to top right,transparent calc(50% - 1.5px),var(--noir) calc(50% - 1.5px),var(--noir) calc(50% + 1.5px),transparent calc(50% + 1.5px))}
+
+  /* nav */
+  .nav{position:sticky;top:0;z-index:60;border-bottom:1px solid var(--filet);background:rgba(4,4,4,.62);backdrop-filter:blur(22px) saturate(0);-webkit-backdrop-filter:blur(22px) saturate(0)}
+  .nav .in{max-width:var(--max);margin-inline:auto;padding:.7rem var(--pad);display:flex;align-items:center;justify-content:space-between;gap:.85rem}
+  .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:inherit;flex:none}
+  .brand .cell{width:26px}
+  .brand .w{font-family:var(--display);font-variation-settings:'wdth' 62,'wght' 900;text-transform:uppercase;font-size:1.05rem;line-height:.86}
+  .nav nav{display:flex;gap:1.4rem;align-items:center}
+  .nav nav a{color:var(--acier);text-decoration:none;transition:color .15s}
+  .nav nav a:hover{color:var(--craie)}
+  .nav .right{display:flex;align-items:center;gap:.6rem}
+  .navcount{display:flex;align-items:center;gap:.45rem;border:1px solid var(--filet);border-radius:100px;padding:.42rem .8rem;color:var(--acier);white-space:nowrap}
+  .navcount b{color:var(--craie);font-weight:600}
+  .navcount .dot{width:6px;height:6px;border-radius:50%;background:var(--craie);flex:none;animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.28}}
+  .nav .btn{padding:.66rem .95rem}
+  .lang{display:flex;border:1px solid var(--filet);border-radius:100px;overflow:hidden;flex:none}
+  .lang button{padding:.42rem .62rem;font-family:var(--mono);font-size:.625rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--acier);transition:background .15s,color .15s}
+  .lang button:hover{color:var(--craie)}
+  .lang button.on{background:var(--craie);color:var(--noir)}
+  @media(max-width:1120px){.nav nav a{display:none}}
+  @media(max-width:760px){.navcount{display:none}}
+  @media(max-width:430px){.nav .btn{display:none}}
+
+  /* héros */
+  .hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:clamp(2rem,5vw,3.5rem) var(--pad) clamp(2.5rem,6vw,4rem)}
+  .logo{width:56px;aspect-ratio:1;border-radius:16px;position:relative;overflow:hidden;background:linear-gradient(150deg,rgba(255,255,255,.20),rgba(255,255,255,.05));
+        border:1px solid var(--filet);box-shadow:inset 0 1px 0 var(--verre-haut),0 10px 30px rgba(0,0,0,.6);backdrop-filter:blur(20px) saturate(0);-webkit-backdrop-filter:blur(20px) saturate(0)}
+  .logo::after{content:'';position:absolute;inset:0;background:linear-gradient(to top right,transparent calc(50% - 1.6px),var(--craie) calc(50% - 1.6px),var(--craie) calc(50% + 1.6px),transparent calc(50% + 1.6px))}
+  .brandname{font-family:var(--display);font-variation-settings:'wdth' 92,'wght' 800;font-size:1.5rem;margin-top:.65rem;letter-spacing:-.01em}
+  .badge{display:inline-flex;align-items:center;gap:.55rem;margin-top:1.4rem;padding:.5rem 1rem;border:1px solid var(--filet);border-radius:100px;background:var(--verre);
+         backdrop-filter:blur(18px) saturate(0);-webkit-backdrop-filter:blur(18px) saturate(0);font-family:var(--mono);font-size:.625rem;font-weight:600;
+         letter-spacing:.18em;text-transform:uppercase;box-shadow:inset 0 1px 0 var(--verre-haut)}
+  .badge .dot{width:6px;height:6px;border-radius:50%;background:var(--craie);flex:none;animation:pulse 2.4s ease-in-out infinite}
+  h1{font-family:var(--display);font-variation-settings:'wdth' 88,'wght' 900;font-weight:900;text-transform:uppercase;
+     font-size:clamp(2.2rem,7.4vw,5.1rem);line-height:.94;letter-spacing:-.025em;margin-top:1.05rem;max-width:18ch}
+  .hero .sub{font-family:var(--mono);font-size:clamp(.7rem,1.45vw,.875rem);letter-spacing:.06em;color:#C4C4C4;margin-top:1rem;max-width:66ch;line-height:1.65}
+
+  .scene{position:relative;width:100%;max-width:1000px;margin-top:clamp(1.75rem,4.5vw,3rem);display:flex;align-items:center;justify-content:center;perspective:1400px}
+  .phone{position:relative;width:clamp(172px,20vw,222px);aspect-ratio:9/18.5;border-radius:30px;background:linear-gradient(165deg,#242424,#0B0B0B 55%,#161616);
+         border:1px solid rgba(255,255,255,.22);padding:7px;box-shadow:0 40px 90px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.28);
+         transform:rotateY(-13deg) rotateX(5deg) rotateZ(-3deg);z-index:2}
+  .screen{width:100%;height:100%;border-radius:24px;background:#080808;border:1px solid rgba(255,255,255,.10);overflow:hidden;display:flex;flex-direction:column;padding:9px 8px}
+  .statusbar{display:flex;justify-content:space-between;font-family:var(--mono);font-size:5px;letter-spacing:.1em;color:#7A7A7A;padding:0 3px 5px}
+  .apphead{text-align:center;font-family:var(--display);font-variation-settings:'wdth' 88,'wght' 800;font-size:8px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.12)}
+  .tabs{display:flex;gap:4px;padding:6px 0}
+  .tab{flex:1;font-family:var(--mono);font-size:4.2px;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:3.5px 0;border-radius:5px;border:1px solid rgba(255,255,255,.12);color:#8C8C8C}
+  .tab.on{background:rgba(255,255,255,.9);color:#080808;border-color:transparent;font-weight:600}
+  .srow{padding:5.5px 0;border-bottom:1px solid rgba(255,255,255,.09)}
+  .srow .lbl{font-family:var(--mono);font-size:4px;letter-spacing:.1em;color:#8C8C8C;text-transform:uppercase}
+  .srow .vals{display:flex;align-items:baseline;justify-content:space-between;margin-top:2.5px}
+  .srow .a{font-family:var(--display);font-variation-settings:'wdth' 70,'wght' 800;font-size:11px;line-height:1}
+  .srow .vs{font-family:var(--mono);font-size:4.5px;color:#6E6E6E;letter-spacing:.1em}
+  .srow .b{font-family:var(--display);font-variation-settings:'wdth' 70,'wght' 800;font-size:11px;line-height:1;color:#8C8C8C}
+  .srow .meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:3.5px;letter-spacing:.08em;color:#5E5E5E;margin-top:2px}
+  .minibar{position:relative;height:2px;background:rgba(255,255,255,.14);margin-top:3.5px;border-radius:2px}
+  .minibar i{position:absolute;left:0;top:0;height:2px;background:var(--craie);border-radius:2px}
+
+  .pill{position:absolute;z-index:3;padding:.62rem .85rem;border-radius:12px;text-align:left;background:rgba(16,16,16,.72);border:1px solid rgba(255,255,255,.20);
+        backdrop-filter:blur(22px) saturate(0);-webkit-backdrop-filter:blur(22px) saturate(0);box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 16px 40px rgba(0,0,0,.7);
+        font-family:var(--mono);white-space:nowrap;animation:float 7s ease-in-out infinite}
+  .pill .k{display:block;font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+  .pill .v{display:block;font-size:.6rem;letter-spacing:.07em;color:#B4B4B4;margin-top:.3rem}
+  .pill .v b{color:var(--craie);font-weight:600}
+  .pill.p1{top:6%;right:56%}.pill.p2{top:20%;left:56%;animation-delay:-1.6s}
+  .pill.p3{top:52%;right:58%;animation-delay:-3.2s}.pill.p4{top:64%;left:55%;animation-delay:-4.8s}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  @media(max-width:900px){
+    .pill{position:static;animation:none;width:100%;max-width:320px;white-space:normal}
+    .scene{flex-direction:column;gap:.55rem;perspective:none}
+    .phone{transform:none;margin-bottom:.4rem}
+    .pillwrap{display:flex;flex-direction:column;gap:.5rem;align-items:center;width:100%}
+  }
+  @media(min-width:901px){.pillwrap{display:contents}}
+
+  .cta{margin-top:clamp(1.75rem,4vw,2.75rem);position:relative;display:inline-flex;align-items:center;justify-content:center;
+       padding:clamp(.95rem,2vw,1.3rem) clamp(2.2rem,6.5vw,4.5rem);border-radius:100px;
+       background:linear-gradient(180deg,rgba(255,255,255,.30) 0%,rgba(120,120,120,.22) 34%,rgba(10,10,10,.86) 68%,rgba(60,60,60,.32) 100%);
+       border:1px solid rgba(255,255,255,.42);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(255,255,255,.18),0 22px 55px rgba(0,0,0,.8);
+       backdrop-filter:blur(16px) saturate(0);-webkit-backdrop-filter:blur(16px) saturate(0);transition:transform .2s ease,box-shadow .2s ease}
+  .cta:hover{transform:translateY(-2px);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.7),0 28px 65px rgba(0,0,0,.85)}
+  .cta span{font-family:var(--display);font-variation-settings:'wdth' 84,'wght' 900;text-transform:uppercase;
+            font-size:clamp(1.4rem,4.4vw,2.9rem);line-height:1;letter-spacing:-.01em;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.6)}
+  .cta .knob{position:absolute;right:-16px;top:50%;transform:translateY(-50%);width:clamp(38px,5vw,54px);aspect-ratio:1;border-radius:15px;overflow:hidden;
+             border:1px solid rgba(255,255,255,.32);background:linear-gradient(150deg,rgba(255,255,255,.22),rgba(255,255,255,.05));
+             box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 10px 26px rgba(0,0,0,.7);backdrop-filter:blur(18px) saturate(0);-webkit-backdrop-filter:blur(18px) saturate(0)}
+  .cta .knob::after{content:'';position:absolute;inset:0;background:linear-gradient(to top right,transparent calc(50% - 1.5px),#fff calc(50% - 1.5px),#fff calc(50% + 1.5px),transparent calc(50% + 1.5px))}
+  @media(max-width:560px){.cta .knob{display:none}}
+  .reassure{font-family:var(--mono);font-size:.625rem;letter-spacing:.14em;text-transform:uppercase;color:var(--acier);margin-top:.9rem}
+  .subctas{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;margin-top:1.05rem}
+  .sbtn{font-family:var(--display);font-variation-settings:'wdth' 92,'wght' 700;text-transform:uppercase;font-size:.8rem;padding:.72rem 1.4rem;border-radius:100px;
+        background:#F2F2F2;color:#070707;border:1px solid #F2F2F2;transition:transform .18s ease,opacity .18s ease}
+  .sbtn:hover{transform:translateY(-1px);opacity:.9}
+  .sbtn.ghost{background:transparent;color:var(--craie);border-color:rgba(255,255,255,.28)}
+  .sbtn.ghost:hover{border-color:var(--craie)}
+  .herofoot{font-family:var(--mono);font-size:clamp(.62rem,1.3vw,.72rem);letter-spacing:.08em;color:#A4A4A4;margin-top:1.4rem;line-height:1.7}
+  .livecount{display:inline-flex;align-items:center;gap:.6rem;margin-top:1.25rem;padding:.6rem 1.1rem;border-radius:100px;border:1px solid var(--filet);background:var(--verre);
+             backdrop-filter:blur(18px) saturate(0);-webkit-backdrop-filter:blur(18px) saturate(0);box-shadow:inset 0 1px 0 var(--verre-haut)}
+  .livecount .n{font-family:var(--display);font-variation-settings:'wdth' 70,'wght' 900;font-size:1.6rem;line-height:1}
+  .livecount .t{font-family:var(--mono);font-size:.625rem;letter-spacing:.14em;text-transform:uppercase;color:var(--acier);text-align:left;line-height:1.35}
+
+  .gap{padding:.95rem 0;border-bottom:1px solid var(--filet)}
+  .gap:last-child{border-bottom:0}
+  .gap-top{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin-bottom:.7rem}
+  .gap-top .k{color:var(--acier)}
+  .gap-top .d{font-family:var(--mono);font-size:.75rem;font-weight:600;letter-spacing:.1em}
+  .track{position:relative;height:30px}
+  .track .base{position:absolute;left:0;right:0;top:11px;height:2px;background:rgba(255,255,255,.16)}
+  .track .fill{position:absolute;left:0;top:11px;height:2px;background:var(--craie);width:0;transition:width 1.1s cubic-bezier(.16,1,.3,1)}
+  .track .you{position:absolute;top:2px;width:2px;height:20px;background:var(--craie);opacity:0;transition:opacity .5s ease .5s}
+  .track .pro{position:absolute;top:2px;width:2px;height:20px;border-left:2px dashed var(--acier)}
+  .track .lab{position:absolute;top:25px;font-family:var(--mono);font-size:.625rem;letter-spacing:.1em;color:var(--acier);transform:translateX(-50%);white-space:nowrap}
+  .track .lab.you-lab{color:var(--craie)}
+  .in-view .track .fill{width:var(--w)}
+  .in-view .track .you{opacity:1}
+
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:clamp(.85rem,2vw,1.15rem)}
+  .step{padding:1.35rem 1.4rem 1.5rem;display:flex;flex-direction:column;gap:.7rem}
+  .step .idx{font-family:var(--mono);font-size:.625rem;letter-spacing:.16em;color:var(--acier)}
+  .step .n{font-family:var(--display);font-variation-settings:'wdth' 68,'wght' 800;text-transform:uppercase;font-size:1.5rem;line-height:1}
+  .step p{color:var(--acier);font-size:.9375rem;line-height:1.5}
+
+  .prods{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(1rem,2.5vw,1.5rem)}
+  .prod{overflow:hidden;display:flex;flex-direction:column}
+  .prod .visual{position:relative;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;padding:1.75rem;border-bottom:1px solid var(--filet);background:rgba(255,255,255,.02)}
+  .prod .visual svg{width:100%;height:100%;color:var(--craie)}
+  .prod .tag{position:absolute;top:.85rem;left:.85rem;color:var(--acier);border:1px solid var(--filet);border-radius:100px;padding:.35rem .7rem;background:rgba(5,5,5,.45)}
+  .prod .body{padding:clamp(1.2rem,3vw,1.75rem);display:flex;flex-direction:column;gap:.85rem;flex:1}
+  .prod .ref{color:var(--acier)}
+  .prod h3{font-family:var(--display);font-variation-settings:'wdth' 62,'wght' 900;text-transform:uppercase;font-size:clamp(1.75rem,5vw,2.4rem);line-height:.95}
+  .prod .price{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap}
+  .prod .price .p{font-family:var(--display);font-variation-settings:'wdth' 70,'wght' 900;font-size:clamp(2rem,6vw,2.8rem);line-height:1}
+  .prod .price .c{color:var(--acier);font-family:var(--mono);font-size:.625rem;letter-spacing:.14em;text-transform:uppercase}
+  .prod .desc{color:var(--acier);font-size:.9375rem;line-height:1.55}
+  .prod ul{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+  .prod li{display:flex;gap:.7rem;font-size:.875rem;line-height:1.45}
+  .prod li::before{content:'';width:9px;height:9px;flex:none;margin-top:.42em;background:var(--craie);clip-path:polygon(0 100%,100% 0,100% 22%,22% 100%)}
+  .prod .foot{margin-top:auto;padding-top:1.1rem;border-top:1px solid var(--filet);display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;color:var(--acier)}
+
+  .packbar{margin-top:clamp(1rem,2.5vw,1.5rem);padding:clamp(1.15rem,3vw,1.6rem);display:flex;justify-content:space-between;align-items:center;gap:1.25rem;flex-wrap:wrap}
+  .packbar .l{display:flex;flex-direction:column;gap:.3rem}
+  .packbar .t{font-family:var(--display);font-variation-settings:'wdth' 68,'wght' 800;text-transform:uppercase;font-size:1.35rem;line-height:1.05}
+  .packbar .r{display:flex;align-items:center;gap:1.15rem;flex-wrap:wrap}
+  .packbar .old{color:var(--acier);text-decoration:line-through;font-family:var(--mono);font-size:.8125rem}
+  .packbar .new{font-family:var(--display);font-variation-settings:'wdth' 70,'wght' 900;font-size:clamp(1.9rem,5vw,2.5rem);line-height:1}
+
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:1px;background:var(--filet);border:1px solid var(--filet);border-radius:14px;overflow:hidden}
+  .metric{background:rgba(10,10,10,.78);backdrop-filter:blur(20px) saturate(0);-webkit-backdrop-filter:blur(20px) saturate(0);padding:1.1rem 1.15rem 1.25rem;display:flex;flex-direction:column;gap:.3rem;min-height:118px}
+  .metric .v{font-family:var(--display);font-variation-settings:'wdth' 62,'wght' 800;font-size:clamp(1.5rem,4.5vw,2rem);line-height:1}
+  .metric .v small{font-variation-settings:'wdth' 85,'wght' 500;font-size:.4em;letter-spacing:.08em;margin-left:.2em;color:var(--acier)}
+  .metric .l{color:var(--acier)}
+  .metric .src{color:#6A6A6A;font-size:.6875rem;font-family:var(--mono);letter-spacing:.1em;margin-top:auto}
+
+  .board{padding:clamp(1.15rem,3vw,1.9rem)}
+  .board-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding-bottom:.9rem;border-bottom:1px solid var(--filet);margin-bottom:.3rem}
+  .board-head .ttl{font-family:var(--display);font-variation-settings:'wdth' 62,'wght' 900;text-transform:uppercase;font-size:clamp(1.3rem,4.5vw,1.9rem);line-height:1}
+  .board-foot{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--filet)}
+  .bf{display:flex;flex-direction:column;gap:.15rem}
+  .bf .v{font-family:var(--display);font-variation-settings:'wdth' 62,'wght' 800;font-size:clamp(1.4rem,5vw,2rem);line-height:1}
+  .bf .v small{font-variation-settings:'wdth' 85,'wght' 500;font-size:.42em;letter-spacing:.08em;margin-left:.2em;color:var(--acier)}
+  .bf .l{color:var(--acier)}
+  .drill{padding:1.2rem 1.3rem 1.35rem;display:flex;flex-direction:column;gap:.8rem;margin-top:1rem}
+  .drill .cause{color:var(--acier)}
+  .drill .cause b{color:var(--craie);font-weight:500}
+  .drill .n{font-family:var(--display);font-variation-settings:'wdth' 68,'wght' 800;text-transform:uppercase;font-size:1.25rem;line-height:1.05}
+  .drill ol{list-style:none;counter-reset:d;display:flex;flex-direction:column;gap:.5rem}
+  .drill li{counter-increment:d;display:flex;gap:.65rem;font-size:.875rem;line-height:1.45;color:var(--acier)}
+  .drill li::before{content:counter(d,decimal-leading-zero);font-family:var(--mono);font-size:.625rem;letter-spacing:.1em;color:var(--craie);padding-top:.3em;flex:none}
+  .drill .foot{padding-top:.85rem;border-top:1px solid var(--filet);display:flex;justify-content:space-between;color:var(--acier)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:.55rem}
+  .chip{border:1px solid var(--filet);border-radius:100px;padding:.7rem 1.1rem;background:var(--verre);backdrop-filter:blur(18px) saturate(0);-webkit-backdrop-filter:blur(18px) saturate(0);
+        font-family:var(--display);font-variation-settings:'wdth' 80,'wght' 600;text-transform:uppercase;font-size:.9375rem}
+  .chip span{color:var(--acier);font-family:var(--mono);font-size:.625rem;letter-spacing:.12em;margin-left:.5rem}
+
+  .specs{border:1px solid var(--filet);border-radius:14px;overflow:hidden}
+  .srowx{display:grid;grid-template-columns:1.1fr 1fr 1fr;border-bottom:1px solid var(--filet)}
+  .srowx:last-child{border-bottom:0}
+  .srowx.hdr{background:rgba(255,255,255,.05)}
+  .scell{padding:.85rem 1rem;border-right:1px solid var(--filet);font-size:.875rem;line-height:1.45;display:flex;align-items:center}
+  .scell:last-child{border-right:0}
+  .scell.k{color:var(--acier)}
+  .srowx.hdr .scell{font-family:var(--display);font-variation-settings:'wdth' 68,'wght' 800;text-transform:uppercase;font-size:1rem}
+  .srowx.tarif .scell:not(.k){font-family:var(--display);font-variation-settings:'wdth' 70,'wght' 900;font-size:1.35rem}
+  @media(max-width:720px){
+    .srowx{grid-template-columns:1fr;border-bottom:0}
+    .srowx.hdr{display:none}
+    .scell{border-right:0;border-bottom:1px solid var(--filet)}
+    .scell.k{background:rgba(255,255,255,.04);font-family:var(--mono);font-size:.625rem;letter-spacing:.14em;text-transform:uppercase}
+    .scell.a::before{content:'SX-V1 · ';color:var(--acier);font-family:var(--mono);font-size:.625rem;letter-spacing:.12em;margin-right:.4rem}
+    .scell.b::before{content:'SX-B1 · ';color:var(--acier);font-family:var(--mono);font-size:.625rem;letter-spacing:.12em;margin-right:.4rem}
+  }
+
+  .faq{display:flex;flex-direction:column;gap:.55rem}
+  details{padding:0 clamp(1rem,2.5vw,1.4rem)}
+  summary{list-style:none;cursor:pointer;padding:1.05rem 0;display:flex;justify-content:space-between;align-items:center;gap:1rem;font-size:1.0625rem;line-height:1.4}
+  summary::-webkit-details-marker{display:none}
+  summary .pm{position:relative;width:14px;height:14px;flex:none}
+  summary .pm::before,summary .pm::after{content:'';position:absolute;background:var(--craie);transition:transform .22s ease}
+  summary .pm::before{left:0;top:6px;width:14px;height:2px}
+  summary .pm::after{left:6px;top:0;width:2px;height:14px}
+  details[open] summary .pm::after{transform:scaleY(0)}
+  details p{color:var(--acier);font-size:.9375rem;line-height:1.6;padding-bottom:1.15rem;max-width:62ch}
+
+  .final{padding:clamp(1.5rem,5vw,3.25rem);text-align:center;display:flex;flex-direction:column;align-items:center;gap:1.1rem}
+  .final h2{font-family:var(--display);font-variation-settings:'wdth' 62,'wght' 900;text-transform:uppercase;font-size:clamp(2.1rem,8.5vw,4.75rem);line-height:.9;letter-spacing:-.015em}
+  .inline-form{display:flex;gap:.55rem;width:100%;max-width:520px}
+  .inline-form input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--filet);border-radius:10px;color:var(--craie);font-family:var(--body);font-size:1rem;padding:.9rem 1rem}
+  .inline-form input::placeholder{color:#5E5E5E}
+  .inline-form input:focus{border-color:var(--craie);outline:none}
+  @media(max-width:520px){.inline-form{flex-direction:column}.inline-form .btn{width:100%}}
+  .legal{color:#6A6A6A;font-size:.75rem;line-height:1.45;max-width:48ch}
+  .msg{font-size:.875rem;line-height:1.45;display:none;border-left:2px solid var(--craie);padding-left:.65rem;text-align:left}
+  .msg.show{display:block}
+  .done{display:none;flex-direction:column;gap:.4rem;align-items:center}
+  .done.show{display:flex}
+  .done .big{font-family:var(--display);font-variation-settings:'wdth' 62,'wght' 900;text-transform:uppercase;font-size:1.8rem;line-height:1}
+
+  footer{border-top:1px solid var(--filet);margin-top:clamp(2rem,6vw,4rem)}
+  footer .in{max-width:var(--max);margin-inline:auto;padding:2rem var(--pad) 3rem;display:flex;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;color:var(--acier)}
+  footer a{color:var(--acier);text-decoration:none}
+  footer a:hover{color:var(--craie)}
+  footer .links{display:flex;gap:1.3rem;flex-wrap:wrap}
+
+  .rv{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+  .rv.in-view{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}.track .fill{width:var(--w)}.track .you{opacity:1}}
+
+  .overlay{position:fixed;inset:0;z-index:100;background:rgba(2,2,2,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+           display:none;align-items:flex-start;justify-content:center;padding:clamp(.75rem,4vw,3rem);overflow-y:auto}
+  .overlay.open{display:flex}
+  .modal{width:100%;max-width:560px;padding:clamp(1.25rem,3.5vw,2rem);position:relative;margin:auto}
+  .modal h3{font-family:var(--display);font-variation-settings:'wdth' 62,'wght' 900;text-transform:uppercase;font-size:clamp(1.7rem,5.5vw,2.5rem);line-height:.94;margin-bottom:.4rem;padding-right:2.5rem}
+  .modal .sub{color:var(--acier);font-size:.9375rem;line-height:1.5;margin-bottom:1.35rem}
+  .close{position:absolute;top:1rem;right:1rem;width:34px;height:34px;border-radius:9px;border:1px solid var(--filet);display:flex;align-items:center;justify-content:center;
+         color:var(--acier);font-size:1.15rem;line-height:1;transition:border-color .15s,color .15s}
+  .close:hover{border-color:var(--craie);color:var(--craie)}
+
+  .opts{display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.15rem}
+  .opt{display:flex;align-items:center;gap:.85rem;padding:.9rem 1rem;border:1px solid var(--filet);border-radius:12px;cursor:pointer;transition:border-color .15s,background .15s}
+  .opt:hover{border-color:rgba(255,255,255,.34)}
+  .opt.sel{border-color:var(--craie);background:rgba(255,255,255,.07)}
+  .opt input{position:absolute;opacity:0;pointer-events:none}
+  .opt .radio{width:16px;height:16px;border-radius:50%;border:1px solid var(--acier);flex:none;position:relative}
+  .opt.sel .radio{border-color:var(--craie)}
+  .opt.sel .radio::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--craie)}
+  .opt .txt{flex:1;display:flex;flex-direction:column;gap:.1rem}
+  .opt .nm{font-family:var(--display);font-variation-settings:'wdth' 80,'wght' 700;text-transform:uppercase;font-size:1rem;line-height:1.15}
+  .opt .ds{color:var(--acier);font-size:.75rem;line-height:1.35}
+  .opt .pr{font-family:var(--display);font-variation-settings:'wdth' 70,'wght' 900;font-size:1.3rem;line-height:1;flex:none}
+
+  .field{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.75rem}
+  .field label{color:var(--acier);font-family:var(--mono);font-size:.625rem;letter-spacing:.14em;text-transform:uppercase}
+  .field input,.field select{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--filet);border-radius:10px;color:var(--craie);
+        font-family:var(--body);font-size:1rem;padding:.85rem .9rem;transition:border-color .15s,background .15s}
+  .field input::placeholder{color:#5E5E5E}
+  .field input:focus,.field select:focus{border-color:var(--craie);background:rgba(255,255,255,.07);outline:none}
+  .field select{appearance:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--acier) 50%),linear-gradient(135deg,var(--acier) 50%,transparent 50%);
+        background-position:calc(100% - 18px) 55%,calc(100% - 12px) 55%;background-size:6px 6px,6px 6px;background-repeat:no-repeat}
+  .field select option{background:#111;color:var(--craie)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+  @media(max-width:440px){.row2{grid-template-columns:1fr}}
+  .qty{display:flex;align-items:center;border:1px solid var(--filet);border-radius:10px;overflow:hidden;width:fit-content}
+  .qty button{width:44px;height:46px;font-size:1.2rem;color:var(--craie);transition:background .15s}
+  .qty button:hover{background:rgba(255,255,255,.08)}
+  .qty .n{width:52px;text-align:center;font-family:var(--display);font-variation-settings:'wdth' 70,'wght' 800;font-size:1.15rem}
+  .total{display:flex;justify-content:space-between;align-items:baseline;padding:1rem 0;margin-top:.4rem;border-top:1px solid var(--filet);border-bottom:1px solid var(--filet);margin-bottom:1.1rem}
+  .total .t{font-family:var(--display);font-variation-settings:'wdth' 70,'wght' 900;font-size:2rem;line-height:1}
+  .modal .btn{width:100%}
+  .modal .msg{margin-top:.8rem}
+  .modal .done{margin-top:.5rem}
+
+  .admin{width:100%;max-width:900px;padding:clamp(1.25rem,3.5vw,2rem);position:relative;margin:auto}
+  .admin h3{font-family:var(--display);font-variation-settings:'wdth' 62,'wght' 900;text-transform:uppercase;font-size:1.9rem;line-height:1;margin-bottom:1.15rem;padding-right:2.5rem}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:.6rem;margin-bottom:1.25rem}
+  .kpi{border:1px solid var(--filet);border-radius:12px;padding:.9rem 1rem;display:flex;flex-direction:column;gap:.2rem}
+  .kpi .v{font-family:var(--display);font-variation-settings:'wdth' 70,'wght' 900;font-size:1.8rem;line-height:1}
+  .kpi .l{color:var(--acier);font-family:var(--mono);font-size:.625rem;letter-spacing:.12em;text-transform:uppercase}
+  .tablewrap{border:1px solid var(--filet);border-radius:12px;overflow:auto;max-height:44vh}
+  table{width:100%;border-collapse:collapse;font-size:.8125rem}
+  th{position:sticky;top:0;background:#0E0E0E;text-align:left;padding:.65rem .8rem;font-family:var(--mono);font-size:.625rem;letter-spacing:.12em;text-transform:uppercase;color:var(--acier);border-bottom:1px solid var(--filet);white-space:nowrap}
+  td{padding:.6rem .8rem;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap}
+  tr:last-child td{border-bottom:0}
+  .adminbar{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.1rem}
+  .adminbar .btn{width:auto;padding:.8rem 1.15rem}
+  .warn{margin-top:1rem;padding:.85rem 1rem;border:1px dashed rgba(255,255,255,.28);border-radius:10px;color:var(--acier);font-size:.8125rem;line-height:1.5}
+</style>
+</head>
+<body>
+
+<div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+<div class="layer">
+
+<div class="nav">
+  <div class="in">
+    <a class="brand" href="#top"><span class="cell" style="width:26px"></span><span class="w">Sex<br>Stats</span></a>
+    <nav>
+      <a href="#principe" class="mono" data-i18n="nav.how"></a>
+      <a href="#produits" class="mono" data-i18n="nav.prod"></a>
+      <a href="#ecart" class="mono" data-i18n="nav.gap"></a>
+      <a href="#specs" class="mono" data-i18n="nav.spec"></a>
+      <a href="#faq" class="mono" data-i18n="nav.faq"></a>
+    </nav>
+    <div class="right">
+      <span class="navcount mono"><span class="dot"></span><b data-count>—</b>&nbsp;<span data-i18n="nav.count"></span></span>
+      <div class="lang" role="group" aria-label="Language">
+        <button data-lang="fr">FR</button><button data-lang="en">EN</button><button data-lang="de">DE</button>
+      </div>
+      <button class="btn" data-open-preorder data-i18n="nav.cta"></button>
+    </div>
+  </div>
+</div>
+
+<header class="hero" id="top">
+  <div class="logo" role="img" aria-label="Sex Stats"></div>
+  <div class="brandname">Sex Stats</div>
+  <span class="badge"><span class="dot"></span><span data-i18n="hero.badge"></span></span>
+  <h1 data-i18n-html="hero.h1"></h1>
+  <p class="sub" data-i18n="hero.sub"></p>
+
+  <div class="scene">
+    <div class="pillwrap">
+      <div class="pill p1"><span class="k" data-i18n="m.topspeed"></span><span class="v"><span data-i18n="w.you"></span> <b>29,4</b> / <span data-i18n="w.pro"></span> <b>31,3 km/h</b></span></div>
+      <div class="pill p2"><span class="k" data-i18n="m.shot"></span><span class="v"><span data-i18n="w.you"></span> <b>92</b> / <span data-i18n="w.pro"></span> <b>114 km/h</b></span></div>
+      <div class="pill p3"><span class="k" data-i18n="m.tackle"></span><span class="v"><span data-i18n="w.you"></span> <b>68 %</b> / <span data-i18n="w.pro"></span> <b>91 %</b></span></div>
+      <div class="pill p4"><span class="k" data-i18n="m.aftercontact"></span><span class="v"><span data-i18n="w.you"></span> <b>2,1</b> / <span data-i18n="w.pro"></span> <b>3,5 m</b></span></div>
+    </div>
+    <div class="phone">
+      <div class="screen">
+        <div class="statusbar"><span>9:41</span><span>▮▮▮</span></div>
+        <div class="apphead">Sex Stats</div>
+        <div class="tabs"><span class="tab on" data-i18n="app.gaps"></span><span class="tab" data-i18n="app.drills"></span></div>
+        <div class="srow"><span class="lbl" data-i18n="m.topspeed"></span><div class="vals"><span class="a">29,4</span><span class="vs">VS</span><span class="b">31,3</span></div><div class="minibar"><i style="width:79%"></i></div><div class="meta"><span>KM/H</span><span data-i18n="ref.top14"></span></div></div>
+        <div class="srow"><span class="lbl" data-i18n="m.shot"></span><div class="vals"><span class="a">92</span><span class="vs">VS</span><span class="b">114</span></div><div class="minibar"><i style="width:52%"></i></div><div class="meta"><span>KM/H</span><span data-i18n="ref.hbl"></span></div></div>
+        <div class="srow"><span class="lbl" data-i18n="m.tackle"></span><div class="vals"><span class="a">68%</span><span class="vs">VS</span><span class="b">91%</span></div><div class="minibar"><i style="width:71%"></i></div><div class="meta"><span data-i18n="w.you"></span><span data-i18n="ref.top14"></span></div></div>
+        <div class="srow" style="border-bottom:0"><span class="lbl" data-i18n="m.aftercontact"></span><div class="vals"><span class="a">2,1</span><span class="vs">VS</span><span class="b">3,5</span></div><div class="minibar"><i style="width:54%"></i></div><div class="meta"><span data-i18n="w.metres"></span><span data-i18n="ref.n2"></span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="cta" data-open-preorder><span data-i18n="hero.cta"></span><i class="knob"></i></button>
+  <p class="reassure" data-i18n="hero.reassure"></p>
+  <span class="livecount"><span class="n" data-count>—</span><span class="t" data-i18n-html="hero.counter"></span></span>
+  <div class="subctas">
+    <button class="sbtn" data-open-preorder data-preselect="vest"><span data-i18n="prod.vest.short"></span> — <span data-price="vest"></span></button>
+    <button class="sbtn ghost" data-open-preorder data-preselect="band"><span data-i18n="prod.band.short"></span> — <span data-price="band"></span></button>
+  </div>
+  <p class="herofoot" data-i18n-html="hero.foot"></p>
+</header>
+
+<main>
+
+<section class="wrap" id="principe">
+  <div class="head mono"><span data-i18n="prin.h"></span><span data-i18n="prin.hr"></span></div>
+  <h2 class="big rv" data-reveal data-i18n-html="prin.title"></h2>
+  <p class="lede rv" data-reveal data-i18n="prin.lede" style="margin-bottom:clamp(1.75rem,4vw,2.75rem)"></p>
+  <div class="steps">
+    <div class="step glass rv" data-reveal><span class="idx" data-i18n="prin.s1.i"></span><span class="n" data-i18n="prin.s1.n"></span><p data-i18n="prin.s1.p"></p></div>
+    <div class="step glass rv" data-reveal><span class="idx" data-i18n="prin.s2.i"></span><span class="n" data-i18n="prin.s2.n"></span><p data-i18n="prin.s2.p"></p></div>
+    <div class="step glass rv" data-reveal><span class="idx" data-i18n="prin.s3.i"></span><span class="n" data-i18n="prin.s3.n"></span><p data-i18n="prin.s3.p"></p></div>
+  </div>
+</section>
+
+<section class="wrap" id="produits">
+  <div class="head mono"><span data-i18n="prod.h"></span><span data-i18n="prod.hr"></span></div>
+  <h2 class="big rv" data-reveal data-i18n="prod.title"></h2>
+  <p class="lede rv" data-reveal data-i18n="prod.lede" style="margin-bottom:clamp(1.75rem,4vw,2.75rem)"></p>
+
+  <div class="prods">
+    <article class="prod glass rv" data-reveal id="vest">
+      <div class="visual">
+        <span class="tag mono" data-i18n="prod.vest.tag"></span>
+        <svg viewBox="0 0 260 220" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" role="img" aria-label="SX-V1">
+          <path d="M92 34 L130 48 L168 34 L196 46 C202 48 205 53 204 59 L196 96 L182 92 L182 186 C182 191 178 195 173 195 L87 195 C82 195 78 191 78 186 L78 92 L64 96 L56 59 C55 53 58 48 64 46 Z"/>
+          <path d="M92 34 C104 52 156 52 168 34" opacity=".55"/>
+          <path d="M78 92 C82 76 86 62 92 50" opacity=".4"/><path d="M182 92 C178 76 174 62 168 50" opacity=".4"/>
+          <path d="M130 60 L130 195" opacity=".22"/><path d="M104 108 L104 195 M156 108 L156 195" opacity=".18"/>
+          <rect x="110" y="96" width="40" height="30" rx="5" opacity=".5"/>
+          <rect x="116" y="102" width="28" height="18" rx="3" fill="currentColor" opacity=".92" stroke="none"/>
+          <path d="M120 118 L140 104" stroke="#050505" stroke-width="2"/>
+          <path d="M130 138 L130 150 M124 144 L136 144" opacity=".3"/>
+        </svg>
+      </div>
+      <div class="body">
+        <span class="ref mono">SX-V1</span>
+        <h3 data-i18n="prod.vest.name"></h3>
+        <div class="price"><span class="p" data-price="vest"></span><span class="c" data-i18n="prod.priceNote"></span></div>
+        <p class="desc" data-i18n="prod.vest.desc"></p>
+        <ul>
+          <li data-i18n="prod.vest.f1"></li><li data-i18n="prod.vest.f2"></li><li data-i18n="prod.vest.f3"></li>
+          <li data-i18n="prod.vest.f4"></li><li data-i18n="prod.vest.f5"></li>
+        </ul>
+        <div class="foot"><span class="mono" data-i18n="prod.vest.sports"></span><button class="btn ghost" data-open-preorder data-preselect="vest" data-i18n="w.preorder"></button></div>
+      </div>
+    </article>
+
+    <article class="prod glass rv" data-reveal id="band">
+      <div class="visual">
+        <span class="tag mono" data-i18n="prod.band.tag"></span>
+        <svg viewBox="0 0 260 220" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" role="img" aria-label="SX-B1">
+          <path d="M104 18 C96 60 94 150 100 202 M156 18 C164 60 166 150 160 202" opacity=".18"/>
+          <path d="M96 96 C96 84 108 78 130 78 C152 78 164 84 164 96 L164 128 C164 140 152 146 130 146 C108 146 96 140 96 128 Z"/>
+          <path d="M96 96 C96 108 108 114 130 114 C152 114 164 108 164 96" opacity=".45"/>
+          <path d="M110 120 L110 142 M124 124 L124 146 M138 124 L138 146 M152 120 L152 142" opacity=".2"/>
+          <rect x="112" y="86" width="36" height="26" rx="6" fill="currentColor" opacity=".92" stroke="none"/>
+          <path d="M118 106 L142 92" stroke="#050505" stroke-width="2"/>
+          <rect x="152" y="150" width="26" height="16" rx="4" opacity=".5"/><path d="M164 146 L164 150" opacity=".5"/>
+          <path d="M186 96 C196 106 196 120 186 130" opacity=".3"/><path d="M198 86 C214 104 214 124 198 142" opacity=".18"/>
+          <path d="M74 96 C64 106 64 120 74 130" opacity=".3"/><path d="M62 86 C46 104 46 124 62 142" opacity=".18"/>
+        </svg>
+      </div>
+      <div class="body">
+        <span class="ref mono">SX-B1</span>
+        <h3 data-i18n="prod.band.name"></h3>
+        <div class="price"><span class="p" data-price="band"></span><span class="c" data-i18n="prod.priceNote"></span></div>
+        <p class="desc" data-i18n="prod.band.desc"></p>
+        <ul>
+          <li data-i18n="prod.band.f1"></li><li data-i18n="prod.band.f2"></li><li data-i18n="prod.band.f3"></li>
+          <li data-i18n="prod.band.f4"></li><li data-i18n="prod.band.f5"></li>
+        </ul>
+        <div class="foot"><span class="mono" data-i18n="prod.band.sports"></span><button class="btn ghost" data-open-preorder data-preselect="band" data-i18n="w.preorder"></button></div>
+      </div>
+    </article>
+  </div>
+
+  <div class="packbar glass rv" data-reveal>
+    <div class="l"><span class="t" data-i18n="pack.title"></span><span class="note" style="max-width:46ch" data-i18n="pack.note"></span></div>
+    <div class="r">
+      <span class="old" data-price="sum"></span><span class="new" data-price="pack"></span>
+      <button class="btn" data-open-preorder data-preselect="pack" data-i18n="pack.cta"></button>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="ecart">
+  <div class="head mono"><span data-i18n="gap.h"></span><span data-i18n="gap.hr"></span></div>
+  <h2 class="big rv" data-reveal data-i18n-html="gap.title"></h2>
+  <div class="two-col" style="margin-top:clamp(1.5rem,4vw,2.5rem)">
+    <div>
+      <div class="board glass rv" data-reveal>
+        <div class="board-head"><span class="ttl" data-i18n-html="gap.profile"></span><span class="mono" data-i18n="gap.date"></span></div>
+        <div class="gap">
+          <div class="gap-top"><span class="k mono" data-i18n="m.tackle"></span><span class="d">−23 PTS</span></div>
+          <div class="track" style="--w:68%"><span class="base"></span><span class="fill"></span><span class="you" style="left:68%"></span><span class="pro" style="left:91%"></span>
+            <span class="lab you-lab" style="left:68%"><span data-i18n="w.you"></span> 68%</span><span class="lab" style="left:91%"><span data-i18n="w.pro"></span> 91%</span></div>
+        </div>
+        <div class="gap" style="padding-top:1.9rem">
+          <div class="gap-top"><span class="k mono" data-i18n="m.aftercontact"></span><span class="d">−1,4 M</span></div>
+          <div class="track" style="--w:54%"><span class="base"></span><span class="fill"></span><span class="you" style="left:54%"></span><span class="pro" style="left:86%"></span>
+            <span class="lab you-lab" style="left:54%"><span data-i18n="w.you"></span> 2,1 M</span><span class="lab" style="left:86%"><span data-i18n="w.pro"></span> 3,5 M</span></div>
+        </div>
+        <div class="gap" style="padding-top:1.9rem">
+          <div class="gap-top"><span class="k mono" data-i18n="m.asym"></span><span class="d">−9 PTS</span></div>
+          <div class="track" style="--w:73%"><span class="base"></span><span class="fill"></span><span class="you" style="left:73%"></span><span class="pro" style="left:88%"></span>
+            <span class="lab you-lab" style="left:73%"><span data-i18n="w.you"></span> 12%</span><span class="lab" style="left:88%"><span data-i18n="w.pro"></span> 3%</span></div>
+        </div>
+        <div class="board-foot">
+          <div class="bf"><span class="v">3</span><span class="l mono" data-i18n="gap.k1"></span></div>
+          <div class="bf"><span class="v">7<small data-i18n="w.wk"></small></span><span class="l mono" data-i18n="gap.k2"></span></div>
+          <div class="bf"><span class="v">N2</span><span class="l mono" data-i18n="gap.k3"></span></div>
+        </div>
+      </div>
+      <div class="drill glass rv" data-reveal>
+        <span class="cause mono"><span data-i18n="gap.linked"></span> · <b data-i18n="gap.linkedTo"></b></span>
+        <span class="n" data-i18n="gap.drillName"></span>
+        <ol><li data-i18n="gap.d1"></li><li data-i18n="gap.d2"></li><li data-i18n="gap.d3"></li></ol>
+        <div class="foot mono"><span data-i18n="gap.dur"></span><span data-i18n="gap.freq"></span></div>
+      </div>
+    </div>
+    <div>
+      <p class="lede" data-i18n="gap.p1"></p>
+      <p class="note" style="margin-top:1rem" data-i18n="gap.p2"></p>
+      <p class="note" style="margin-top:1rem" data-i18n="gap.p3"></p>
+      <p class="note" style="margin-top:1rem" data-i18n="gap.p4"></p>
+      <button class="btn" style="margin-top:1.6rem" data-open-preorder data-i18n="hero.cta"></button>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="head mono"><span data-i18n="met.h"></span><span data-i18n="met.hr"></span></div>
+  <div class="metrics rv" data-reveal>
+    <div class="metric"><span class="v">7,84<small>KM</small></span><span class="l mono" data-i18n="met.dist"></span><span class="src">SX-V1</span></div>
+    <div class="metric"><span class="v">29,4<small>KM/H</small></span><span class="l mono" data-i18n="m.topspeed"></span><span class="src">SX-V1</span></div>
+    <div class="metric"><span class="v">23</span><span class="l mono" data-i18n="met.sprints"></span><span class="src">SX-V1</span></div>
+    <div class="metric"><span class="v">612<small>M</small></span><span class="l mono" data-i18n="met.hi"></span><span class="src">SX-V1</span></div>
+    <div class="metric"><span class="v">41</span><span class="l mono" data-i18n="met.impacts"></span><span class="src">SX-V1</span></div>
+    <div class="metric"><span class="v">318</span><span class="l mono" data-i18n="met.load"></span><span class="src">SX-V1</span></div>
+    <div class="metric"><span class="v">64</span><span class="l mono" data-i18n="met.tech"></span><span class="src">SX-B1</span></div>
+    <div class="metric"><span class="v">12<small>%</small></span><span class="l mono" data-i18n="m.asym"></span><span class="src">SX-B1</span></div>
+  </div>
+  <p class="note rv" data-reveal data-i18n="met.note" style="margin-top:1.25rem"></p>
+</section>
+
+<section class="wrap">
+  <div class="head mono"><span data-i18n="disc.h"></span><span data-i18n="disc.hr"></span></div>
+  <div class="chips rv" data-reveal>
+    <span class="chip" data-i18n="sp.rugby"></span><span class="chip" data-i18n="sp.afl"></span><span class="chip" data-i18n="sp.hand"></span>
+    <span class="chip" data-i18n="sp.track"></span><span class="chip" data-i18n="sp.lax"></span><span class="chip" data-i18n="sp.ult"></span><span class="chip" data-i18n="sp.hockey"></span>
+  </div>
+  <p class="note rv" data-reveal data-i18n="disc.note" style="margin-top:1.25rem"></p>
+</section>
+
+<section class="wrap" id="specs">
+  <div class="head mono"><span data-i18n="spec.h"></span><span data-i18n="spec.hr"></span></div>
+  <div class="specs rv" data-reveal>
+    <div class="srowx hdr"><div class="scell" data-i18n="spec.col1"></div><div class="scell" data-i18n="spec.col2"></div><div class="scell" data-i18n="spec.col3"></div></div>
+    <div class="srowx tarif"><div class="scell k" data-i18n="spec.price"></div><div class="scell a" data-price="vest"></div><div class="scell b" data-price="band"></div></div>
+    <div class="srowx"><div class="scell k" data-i18n="spec.wear"></div><div class="scell a" data-i18n="spec.wear.a"></div><div class="scell b" data-i18n="spec.wear.b"></div></div>
+    <div class="srowx"><div class="scell k" data-i18n="spec.weight"></div><div class="scell a">18 g</div><div class="scell b">12 g</div></div>
+    <div class="srowx"><div class="scell k" data-i18n="spec.pos"></div><div class="scell a">GPS 10 Hz + GNSS</div><div class="scell b" data-i18n="spec.pos.b"></div></div>
+    <div class="srowx"><div class="scell k" data-i18n="spec.imu"></div><div class="scell a" data-i18n="spec.imu.a"></div><div class="scell b" data-i18n="spec.imu.b"></div></div>
+    <div class="srowx"><div class="scell k" data-i18n="spec.reads"></div><div class="scell a" data-i18n="spec.reads.a"></div><div class="scell b" data-i18n="spec.reads.b"></div></div>
+    <div class="srowx"><div class="scell k" data-i18n="spec.batt"></div><div class="scell a">6 h</div><div class="scell b">10 h</div></div>
+    <div class="srowx"><div class="scell k" data-i18n="spec.water"></div><div class="scell a" data-i18n="spec.water.a"></div><div class="scell b">IP67</div></div>
+    <div class="srowx"><div class="scell k" data-i18n="spec.sync"></div><div class="scell a" data-i18n="spec.sync.v"></div><div class="scell b" data-i18n="spec.sync.v"></div></div>
+    <div class="srowx"><div class="scell k" data-i18n="spec.app"></div><div class="scell a">iOS / Android</div><div class="scell b">iOS / Android</div></div>
+  </div>
+  <p class="note rv" data-reveal data-i18n="spec.note" style="margin-top:1.25rem"></p>
+</section>
+
+<section class="wrap" id="faq">
+  <div class="head mono"><span data-i18n="faq.h"></span><span data-i18n="faq.hr"></span></div>
+  <div class="faq rv" data-reveal>
+    <details class="glass"><summary><span data-i18n="faq.q1"></span><span class="pm"></span></summary><p data-i18n="faq.a1"></p></details>
+    <details class="glass"><summary><span data-i18n="faq.q2"></span><span class="pm"></span></summary><p data-i18n="faq.a2"></p></details>
+    <details class="glass"><summary><span data-i18n="faq.q3"></span><span class="pm"></span></summary><p data-i18n="faq.a3"></p></details>
+    <details class="glass"><summary><span data-i18n="faq.q4"></span><span class="pm"></span></summary><p data-i18n="faq.a4"></p></details>
+    <details class="glass"><summary><span data-i18n="faq.q5"></span><span class="pm"></span></summary><p data-i18n="faq.a5"></p></details>
+    <details class="glass"><summary><span data-i18n="faq.q6"></span><span class="pm"></span></summary><p data-i18n="faq.a6"></p></details>
+    <details class="glass"><summary><span data-i18n="faq.q7"></span><span class="pm"></span></summary><p data-i18n="faq.a7"></p></details>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="final glass rv" data-reveal id="alerte">
+    <span class="mono" style="color:var(--acier)" data-i18n="news.eyebrow"></span>
+    <h2 data-i18n-html="news.title"></h2>
+    <p class="lede" style="color:var(--acier)" data-i18n="news.lede"></p>
+    <form class="inline-form" id="signup" novalidate>
+      <label for="email2" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Email</label>
+      <input type="email" id="email2" data-i18n-ph="w.emailPh" autocomplete="email" required>
+      <button type="submit" class="btn" data-i18n="news.cta"></button>
+    </form>
+    <p class="msg" id="signupMsg" role="alert" style="max-width:520px"></p>
+    <div class="done" id="signupDone" role="status"><span class="big" data-i18n="news.doneT"></span><p class="note" style="text-align:center" data-i18n="news.doneP"></p></div>
+    <p class="legal" data-i18n="news.legal"></p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="in">
+    <div style="display:flex;align-items:center;gap:.6rem"><span class="cell" style="width:24px"></span><span class="mono">Sex Stats — Field stats for amateur athletes</span></div>
+    <div class="links mono">
+      <a href="#produits" data-i18n="nav.prod"></a><a href="#specs" data-i18n="nav.spec"></a><a href="#faq" data-i18n="nav.faq"></a>
+      <a href="#alerte" data-i18n="foot.alert"></a><a href="#admin" id="adminLink">Admin</a>
+    </div>
+    <span class="mono" data-i18n="foot.rights"></span>
+  </div>
+</footer>
+
+</div>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal glass">
+    <button class="close" id="closeModal" aria-label="Close">✕</button>
+    <h3 id="modalTitle" data-i18n="mod.title"></h3>
+    <p class="sub" data-i18n="mod.sub"></p>
+    <form id="preorderForm" novalidate>
+      <div class="opts" role="radiogroup">
+        <label class="opt" data-opt="vest"><input type="radio" name="produit" value="vest" checked><span class="radio"></span>
+          <span class="txt"><span class="nm" data-i18n="prod.vest.name"></span><span class="ds" data-i18n="mod.vest.ds"></span></span><span class="pr" data-price="vest"></span></label>
+        <label class="opt" data-opt="band"><input type="radio" name="produit" value="band"><span class="radio"></span>
+          <span class="txt"><span class="nm" data-i18n="prod.band.name"></span><span class="ds" data-i18n="mod.band.ds"></span></span><span class="pr" data-price="band"></span></label>
+        <label class="opt" data-opt="pack"><input type="radio" name="produit" value="pack"><span class="radio"></span>
+          <span class="txt"><span class="nm" data-i18n="mod.pack.nm"></span><span class="ds" data-i18n="mod.pack.ds"></span></span><span class="pr" data-price="pack"></span></label>
+      </div>
+      <div class="field"><label for="pmail" data-i18n="w.email"></label><input type="email" id="pmail" data-i18n-ph="w.emailPh" autocomplete="email" required></div>
+      <div class="row2">
+        <div class="field"><label for="psport" data-i18n="w.sport"></label><select id="psport"></select></div>
+        <div class="field"><label for="pqty" data-i18n="w.qty"></label>
+          <div class="qty"><button type="button" id="minus" aria-label="−">−</button><span class="n" id="qtyN">1</span><button type="button" id="plus" aria-label="+">+</button></div>
+          <input type="hidden" id="pqty" value="1"></div>
+      </div>
+      <div class="total"><span class="mono" style="color:var(--acier)" data-i18n="mod.total"></span><span class="t" id="total"></span></div>
+      <button type="submit" class="btn" id="pSubmit" data-i18n="mod.confirm"></button>
+      <p class="legal" style="margin-top:.8rem" data-i18n="mod.legal"></p>
+      <p class="msg" id="pMsg" role="alert"></p>
+    </form>
+    <div class="done" id="pDone" role="status" style="align-items:flex-start;text-align:left">
+      <span class="big" data-i18n="mod.doneT"></span>
+      <p class="note" id="pDoneTxt"></p>
+      <button class="btn ghost" id="pClose2" style="margin-top:.6rem;width:auto" data-i18n="w.close"></button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="adminOverlay" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+  <div class="admin glass">
+    <button class="close" id="closeAdmin" aria-label="Close">✕</button>
+    <h3 id="adminTitle" data-i18n="adm.title"></h3>
+    <div class="kpis">
+      <div class="kpi"><span class="v" id="kTotal">0</span><span class="l" data-i18n="adm.k1"></span></div>
+      <div class="kpi"><span class="v" id="kVest">0</span><span class="l" data-i18n="adm.k2"></span></div>
+      <div class="kpi"><span class="v" id="kBand">0</span><span class="l" data-i18n="adm.k3"></span></div>
+      <div class="kpi"><span class="v" id="kPack">0</span><span class="l" data-i18n="adm.k4"></span></div>
+      <div class="kpi"><span class="v" id="kCA">0</span><span class="l" data-i18n="adm.k5"></span></div>
+      <div class="kpi"><span class="v" id="kMails">0</span><span class="l" data-i18n="adm.k6"></span></div>
+    </div>
+    <div class="tablewrap"><table>
+      <thead><tr><th data-i18n="adm.t1"></th><th data-i18n="adm.t2"></th><th data-i18n="adm.t3"></th><th data-i18n="adm.t4"></th><th data-i18n="adm.t5"></th><th data-i18n="adm.t6"></th><th data-i18n="adm.t7"></th></tr></thead>
+      <tbody id="adminBody"></tbody>
+    </table></div>
+    <div class="adminbar">
+      <button class="btn" id="exportCsv" data-i18n="adm.csv"></button>
+      <button class="btn ghost" id="copyMails" data-i18n="adm.copy"></button>
+      <button class="btn ghost" id="resetAll" data-i18n="adm.reset"></button>
+    </div>
+    <p class="warn" data-i18n-html="adm.warn"></p>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   CONFIGURATION — À MODIFIER AVANT MISE EN LIGNE
+   ENDPOINT : URL Formspree / Brevo / Make. Vide = mode démonstration.
+   OFFSET   : précommandes obtenues hors site. Ne le gonflez pas.
+   ════════════════════════════════════════════════════════════════ */
+const ENDPOINT = "";
+const OFFSET   = 0;
+
+const PRIX = { vest:179, band:60, pack:219 };
+const KEY  = "sexstats-preorders-v1";
+const LKEY = "sexstats-lang";
+
+/* ---------------- traductions ---------------- */
+const T = {
+fr:{
+"nav.how":"Principe","nav.prod":"Produits","nav.gap":"L'écart","nav.spec":"Specs","nav.faq":"FAQ",
+"nav.count":"précommandes","nav.cta":"Précommander",
+"w.you":"Vous","w.pro":"Pro","w.metres":"MÈTRES","w.wk":"SEM","w.preorder":"Précommander","w.close":"Fermer",
+"w.email":"Adresse email","w.emailPh":"vous@exemple.com","w.sport":"Discipline","w.qty":"Quantité","w.select":"Sélectionnez —",
+"m.topspeed":"Vitesse max","m.shot":"Vitesse de tir","m.tackle":"Plaquages réussis","m.aftercontact":"Mètres après contact","m.asym":"Asymétrie G/D",
+"app.gaps":"Écarts","app.drills":"Séances","ref.top14":"PRO — TOP 14","ref.hbl":"PRO — LIQUI MOLY","ref.n2":"PRO — N2",
+"hero.badge":"Précommande ouverte · Expédition automne 2026",
+"hero.h1":"Vos chiffres.<br>L'écart avec le pro.",
+"hero.sub":"Transformez vos données de terrain en performance de haut niveau avec la plateforme Sex Stats.",
+"hero.cta":"Précommander","hero.reassure":"Aucun paiement aujourd'hui · Annulation à tout moment",
+"hero.counter":"précommandes<br>enregistrées",
+"hero.foot":"Field stats for amateur athletes.<br>Première série limitée — la précommande réserve votre place.",
+"prin.h":"Le principe","prin.hr":"Trois temps, aucun détour","prin.title":"Mesurer.<br>Comparer.<br>Combler.",
+"prin.lede":"Un pro connaît ses chiffres. Un amateur joue à l'aveugle. C'est la seule différence sur laquelle vous pouvez agir dès votre prochain entraînement.",
+"prin.s1.i":"Temps 01","prin.s1.n":"Mesurer","prin.s1.p":"La veste ou le bracelet enregistre l'intégralité de la séance : déplacements, accélérations, impacts, gestes techniques. Vous ne changez rien à votre routine.",
+"prin.s2.i":"Temps 02","prin.s2.n":"Comparer","prin.s2.p":"Chaque indicateur est confronté à la référence du niveau visé, à votre poste et dans votre discipline. La source du repère est toujours affichée.",
+"prin.s3.i":"Temps 03","prin.s3.n":"Combler","prin.s3.p":"Chaque écart ouvre une séance ciblée : exercices, volume, fréquence, durée estimée avant fermeture de l'écart. Rien d'autre.",
+"prod.h":"Produits","prod.hr":"Deux capteurs, deux lectures du jeu","prod.title":"Le matériel",
+"prod.lede":"La veste lit votre déplacement et votre charge. Le bracelet lit votre geste et vos appuis. Ensemble, ils couvrent tout ce qu'un staff professionnel regarde.",
+"prod.priceNote":"TTC · Expédition automne 2026",
+"prod.vest.tag":"01 — Torse","prod.vest.name":"Veste GPS","prod.vest.short":"Veste",
+"prod.vest.desc":"Un tissu compressif sans coutures au contact, et un pod de 18 g logé entre les omoplates. Il enregistre chaque mètre parcouru, chaque accélération et chaque collision, du premier échauffement au coup de sifflet final.",
+"prod.vest.f1":"GPS 10 Hz + GNSS multi-constellation, centrale inertielle 100 Hz","prod.vest.f2":"Distance, vitesse max, sprints, haute intensité, charge de match",
+"prod.vest.f3":"Accélérations, décélérations, changements de direction, impacts","prod.vest.f4":"Autonomie visée 6 h, synchronisation sans fil en fin de séance",
+"prod.vest.f5":"Tailles XS à XXL, pod amovible, veste lavable en machine","prod.vest.sports":"Rugby · Football US · Lacrosse · Hockey · Ultimate",
+"prod.band.tag":"02 — Mollet ou bras","prod.band.name":"Bracelet","prod.band.short":"Bracelet",
+"prod.band.desc":"Douze grammes portés au mollet ou au biceps, échantillonnés à 1 000 Hz. Là où la veste voit vos courses, le bracelet voit vos gestes : la frappe, la passe, l'appui, et l'écart entre votre côté fort et votre côté faible.",
+"prod.band.f1":"Centrale inertielle 1 000 Hz, détection de geste par apprentissage","prod.band.f2":"Frappes, passes, touches de balle, vitesse et qualité d'exécution",
+"prod.band.f3":"Appuis, impulsions, asymétrie gauche / droite en pourcentage","prod.band.f4":"Autonomie visée 10 h, charge magnétique, étanchéité IP67",
+"prod.band.f5":"Sangle unique ajustable, portable sous le bandage ou la chaussette","prod.band.sports":"Handball · Rugby · Lacrosse · Athlétisme · Ultimate",
+"pack.title":"Pack complet — veste + bracelet","pack.note":"Le seul moyen de savoir si un écart vient de votre condition physique ou de votre technique.","pack.cta":"Précommander le pack",
+"gap.h":"L'écart","gap.hr":"Ce que vous voyez après la séance","gap.title":"Un relevé,<br>pas un fil<br>d'actualité",
+"gap.profile":"Rugby<br>3ᵉ ligne","gap.date":"Séance du 04.09","gap.k1":"Écarts ouverts","gap.k2":"Plan en cours","gap.k3":"Référence visée",
+"gap.linked":"Séance liée","gap.linkedTo":"Plaquage −23 pts","gap.drillName":"Hauteur d'épaule & placement",
+"gap.d1":"Plaquages sur sac, épaule seule, 4 × 8 par côté","gap.d2":"Approche freinée : trois pas courts avant le contact","gap.d3":"Gainage anti-rotation, 3 × 40 s",
+"gap.dur":"35 min","gap.freq":"2 × / semaine",
+"gap.p1":"Votre valeur en trait plein. La référence du niveau visé en pointillé. L'écart chiffré à droite.",
+"gap.p2":"Aucun écart n'est rouge, aucun progrès n'est vert. Le chiffre est là, et la barre se referme visiblement de semaine en semaine. C'est la seule animation de l'application.",
+"gap.p3":"Chaque référence est nommée : niveau, poste, championnat, taille de l'échantillon. Un repère sans provenance ne vaut rien, et vous devez pouvoir le montrer à votre entraîneur.",
+"gap.p4":"Aucune séance ne s'ouvre seule. Elle est toujours attachée à l'écart qui l'a déclenchée, nommé en tête de fiche.",
+"met.h":"Mesures","met.hr":"Extrait d'un relevé de match","met.dist":"Distance","met.sprints":"Sprints","met.hi":"Haute intensité",
+"met.impacts":"Impacts","met.load":"Charge de match","met.tech":"Gestes techniques",
+"met.note":"Valeurs d'illustration issues d'un profil de troisième ligne. Les indicateurs affichés changent selon la discipline et le poste sélectionnés.",
+"disc.h":"Disciplines","disc.hr":"Au lancement",
+"disc.note":"Chaque discipline arrive avec ses propres indicateurs, ses postes et ses références de niveau. Votre sport n'est pas dans la liste ? Indiquez-le en précommandant, cela détermine l'ordre des prochaines ouvertures.",
+"sp.rugby":"Rugby","sp.afl":"Football américain","sp.hand":"Handball","sp.track":"Athlétisme","sp.lax":"Lacrosse","sp.ult":"Ultimate","sp.hockey":"Hockey sur glace","sp.other":"Autre",
+"spec.h":"Spécifications","spec.hr":"Objectifs techniques — pré-série","spec.col1":"Caractéristique","spec.col2":"SX-V1 · Veste","spec.col3":"SX-B1 · Bracelet",
+"spec.price":"Tarif de précommande","spec.wear":"Port","spec.wear.a":"Torse, pod dorsal","spec.wear.b":"Mollet ou biceps",
+"spec.weight":"Poids du capteur","spec.pos":"Localisation","spec.pos.b":"Aucune — inertiel seul","spec.imu":"Centrale inertielle","spec.imu.a":"100 Hz, 9 axes","spec.imu.b":"1 000 Hz, 9 axes",
+"spec.reads":"Lecture","spec.reads.a":"Déplacement et charge","spec.reads.b":"Geste et appuis","spec.batt":"Autonomie","spec.water":"Étanchéité","spec.water.a":"IP67, veste lavable",
+"spec.sync":"Synchronisation","spec.sync.v":"Bluetooth, fin de séance","spec.app":"Application",
+"spec.note":"Ces valeurs sont les objectifs techniques de la pré-série et peuvent évoluer avant la mise en production. Les caractéristiques définitives seront communiquées aux précommandes avant tout prélèvement.",
+"faq.h":"Questions","faq.hr":"Avant de précommander",
+"faq.q1":"Suis-je débité aujourd'hui ?","faq.a1":"Non. La précommande réserve votre place dans la première série et fige votre tarif. Vous êtes recontacté à l'ouverture des commandes pour finaliser le paiement, et vous pouvez annuler d'ici là sans aucun frais ni justification.",
+"faq.q2":"Combien coûtent les produits ?","faq.a2":"La veste GPS SX-V1 est à 179 € TTC, le bracelet SX-B1 à 60 € TTC. Le pack complet réunissant les deux est à 219 € au lieu de 239 €. L'application est incluse, sans abonnement obligatoire pour les fonctions décrites sur cette page.",
+"faq.q3":"D'où viennent les références « pro » ?","faq.a3":"De relevés agrégés par discipline, poste et niveau de championnat. Chaque référence affichée indique sa provenance et la taille de son échantillon. Quand nous n'avons pas de repère fiable pour un poste, nous n'affichons pas d'écart plutôt que d'en inventer un.",
+"faq.q4":"Faut-il les deux produits ?","faq.a4":"Non. Chacun fonctionne seul et ouvre ses propres écarts. La veste répond à « est-ce que je tiens le rythme du niveau au-dessus », le bracelet à « est-ce que mon geste et mes appuis sont au niveau ». Utilisés ensemble, ils permettent de distinguer un problème physique d'un problème technique.",
+"faq.q5":"Est-ce utilisable en match officiel ?","faq.a5":"Cela dépend de votre fédération et de votre championnat. Le port de capteurs est encadré différemment selon les disciplines et les catégories. Vérifiez auprès de votre club avant toute utilisation en compétition ; l'entraînement ne pose en revanche aucune difficulté.",
+"faq.q6":"Que deviennent mes données ?","faq.a6":"Elles vous appartiennent. Vous choisissez de les partager ou non avec votre entraîneur, et vous pouvez les exporter ou tout supprimer à tout moment. Aucune donnée de performance n'est revendue à des tiers.",
+"faq.q7":"À partir de quel âge ?","faq.a7":"Réservé aux 16 ans et plus. Pour les catégories jeunes, l'accès se fait par l'intermédiaire d'un club, avec autorisation parentale et un tableau de bord adapté qui masque les comparaisons de charge inadaptées à la croissance.",
+"news.eyebrow":"Pas encore décidé ?","news.title":"Restez<br>informé",
+"news.lede":"Laissez votre email : un seul message au lancement, avec la date d'ouverture des commandes et les caractéristiques définitives.",
+"news.cta":"M'avertir","news.doneT":"C'est noté","news.doneP":"Vous êtes sur la liste. On vous écrit à l'ouverture des commandes.","news.legal":"Désinscription en un clic. Aucune donnée revendue.",
+"foot.alert":"Être informé","foot.rights":"© 2026 — Tous droits réservés",
+"mod.title":"Précommander","mod.sub":"Aucun paiement aujourd'hui. Vous réservez votre place dans la première série et figez votre tarif.",
+"mod.vest.ds":"Déplacement, charge, impacts","mod.band.ds":"Geste, appuis, asymétrie","mod.pack.nm":"Pack complet","mod.pack.ds":"Veste + bracelet — économie de 20 €",
+"mod.total":"Total réservé","mod.confirm":"Confirmer ma précommande","mod.legal":"En confirmant, vous acceptez d'être recontacté à l'ouverture des commandes. Annulation possible à tout moment, sans frais.",
+"mod.doneT":"Précommande enregistrée",
+"adm.title":"Tableau de bord","adm.k1":"Précommandes","adm.k2":"Vestes","adm.k3":"Bracelets","adm.k4":"Packs","adm.k5":"CA réservé","adm.k6":"Emails",
+"adm.t1":"Date","adm.t2":"Type","adm.t3":"Email","adm.t4":"Produit","adm.t5":"Qté","adm.t6":"Montant","adm.t7":"Discipline",
+"adm.csv":"Exporter en CSV","adm.copy":"Copier les emails","adm.reset":"Tout effacer","adm.empty":"Aucune entrée pour le moment.",
+"adm.warn":"<b>Prototype.</b> Les données sont stockées côté navigateur et lisibles par toute personne ayant ce lien. Avant toute mise en ligne réelle, branchez un service externe (Formspree, Brevo, Stripe) via la constante <code>ENDPOINT</code> en haut du script, pour être conforme au RGPD.",
+"js.pre":"Précommande","js.alert":"Alerte","js.sending":"Enregistrement…","js.sending2":"Envoi…","js.copied":"Copié","js.confirmDel":"Confirmer l'effacement",
+"js.badMail":"Renseignez une adresse email valide pour être recontacté.","js.fail":"L'enregistrement a échoué. Réessayez dans un instant.",
+"js.done":"{q} × {p} — {m} réservés. Vous êtes le n° {n} sur la liste. Aucun prélèvement n'a été effectué : nous vous écrivons à {e} dès l'ouverture des commandes."
+},
+en:{
+"nav.how":"How it works","nav.prod":"Products","nav.gap":"The gap","nav.spec":"Specs","nav.faq":"FAQ",
+"nav.count":"pre-orders","nav.cta":"Pre-order",
+"w.you":"You","w.pro":"Pro","w.metres":"METRES","w.wk":"WKS","w.preorder":"Pre-order","w.close":"Close",
+"w.email":"Email address","w.emailPh":"you@example.com","w.sport":"Sport","w.qty":"Quantity","w.select":"Select —",
+"m.topspeed":"Top speed","m.shot":"Shot speed","m.tackle":"Tackle success","m.aftercontact":"Metres after contact","m.asym":"L/R asymmetry",
+"app.gaps":"Gaps","app.drills":"Drills","ref.top14":"PRO — TOP 14","ref.hbl":"PRO — HBL","ref.n2":"PRO — TIER 2",
+"hero.badge":"Pre-order open · Shipping autumn 2026",
+"hero.h1":"Your numbers.<br>The gap to pro.",
+"hero.sub":"Turn your field data into elite performance with the Sex Stats platform.",
+"hero.cta":"Pre-order now","hero.reassure":"No payment today · Cancel anytime",
+"hero.counter":"pre-orders<br>placed",
+"hero.foot":"Field stats for amateur athletes.<br>First production run is limited — pre-ordering holds your place.",
+"prin.h":"How it works","prin.hr":"Three steps, no detours","prin.title":"Measure.<br>Compare.<br>Close.",
+"prin.lede":"A pro knows their numbers. An amateur plays blind. That is the one difference you can act on at your very next session.",
+"prin.s1.i":"Step 01","prin.s1.n":"Measure","prin.s1.p":"The vest or the band records the whole session: movement, accelerations, impacts, technical actions. You change nothing about your routine.",
+"prin.s2.i":"Step 02","prin.s2.n":"Compare","prin.s2.p":"Every metric is set against the benchmark for the level you are chasing, at your position and in your sport. The source of the benchmark is always shown.",
+"prin.s3.i":"Step 03","prin.s3.n":"Close","prin.s3.p":"Every gap opens a targeted drill: exercises, volume, frequency, and the estimated time before the gap closes. Nothing else.",
+"prod.h":"Products","prod.hr":"Two sensors, two readings of the game","prod.title":"The hardware",
+"prod.lede":"The vest reads your movement and your load. The band reads your technique and your footwork. Together they cover everything a professional staff looks at.",
+"prod.priceNote":"Incl. VAT · Shipping autumn 2026",
+"prod.vest.tag":"01 — Torso","prod.vest.name":"GPS vest","prod.vest.short":"Vest",
+"prod.vest.desc":"Compression fabric with no seams against the skin, and an 18 g pod sitting between the shoulder blades. It records every metre covered, every acceleration and every collision, from the first warm-up to the final whistle.",
+"prod.vest.f1":"10 Hz GPS + multi-constellation GNSS, 100 Hz inertial unit","prod.vest.f2":"Distance, top speed, sprints, high-intensity running, match load",
+"prod.vest.f3":"Accelerations, decelerations, changes of direction, impacts","prod.vest.f4":"Target battery life 6 h, wireless sync at the end of the session",
+"prod.vest.f5":"Sizes XS to XXL, removable pod, machine-washable vest","prod.vest.sports":"Rugby · American football · Lacrosse · Hockey · Ultimate",
+"prod.band.tag":"02 — Calf or arm","prod.band.name":"Band","prod.band.short":"Band",
+"prod.band.desc":"Twelve grams worn on the calf or the biceps, sampled at 1,000 Hz. Where the vest sees your running, the band sees your actions: the strike, the pass, the plant, and the gap between your strong and weak side.",
+"prod.band.f1":"1,000 Hz inertial unit, learned gesture recognition","prod.band.f2":"Strikes, passes, touches, execution speed and quality",
+"prod.band.f3":"Plants, take-offs, left / right asymmetry as a percentage","prod.band.f4":"Target battery life 10 h, magnetic charging, IP67 rated",
+"prod.band.f5":"One adjustable strap, wearable under strapping or a sock","prod.band.sports":"Handball · Rugby · Lacrosse · Track & field · Ultimate",
+"pack.title":"Full pack — vest + band","pack.note":"The only way to know whether a gap comes from your conditioning or from your technique.","pack.cta":"Pre-order the pack",
+"gap.h":"The gap","gap.hr":"What you see after a session","gap.title":"A record,<br>not a<br>feed",
+"gap.profile":"Rugby<br>Back row","gap.date":"Session 04.09","gap.k1":"Open gaps","gap.k2":"Plan running","gap.k3":"Target level",
+"gap.linked":"Linked drill","gap.linkedTo":"Tackle −23 pts","gap.drillName":"Shoulder height & placement",
+"gap.d1":"Bag tackles, shoulder only, 4 × 8 each side","gap.d2":"Braked approach: three short steps before contact","gap.d3":"Anti-rotation core work, 3 × 40 s",
+"gap.dur":"35 min","gap.freq":"2 × / week",
+"gap.p1":"Your value as a solid line. The benchmark for the level above as a dashed one. The gap in figures on the right.",
+"gap.p2":"No gap is red, no progress is green. The number is simply there, and the bar visibly closes week after week. It is the only animation in the app.",
+"gap.p3":"Every benchmark is named: level, position, league, sample size. A reference without a source is worthless, and you need to be able to show it to your coach.",
+"gap.p4":"No drill opens on its own. It is always attached to the gap that triggered it, named at the top of the card.",
+"met.h":"Metrics","met.hr":"Extract from a match record","met.dist":"Distance","met.sprints":"Sprints","met.hi":"High intensity",
+"met.impacts":"Impacts","met.load":"Match load","met.tech":"Technical actions",
+"met.note":"Illustrative values from a back-row profile. The metrics shown change with the sport and the position you select.",
+"disc.h":"Sports","disc.hr":"At launch",
+"disc.note":"Every sport arrives with its own metrics, positions and level benchmarks. Yours not on the list? Tell us when you pre-order — it decides the order in which we open the next ones.",
+"sp.rugby":"Rugby","sp.afl":"American football","sp.hand":"Handball","sp.track":"Track & field","sp.lax":"Lacrosse","sp.ult":"Ultimate","sp.hockey":"Ice hockey","sp.other":"Other",
+"spec.h":"Specifications","spec.hr":"Target figures — pre-production","spec.col1":"Specification","spec.col2":"SX-V1 · Vest","spec.col3":"SX-B1 · Band",
+"spec.price":"Pre-order price","spec.wear":"Worn","spec.wear.a":"Torso, back pod","spec.wear.b":"Calf or biceps",
+"spec.weight":"Sensor weight","spec.pos":"Positioning","spec.pos.b":"None — inertial only","spec.imu":"Inertial unit","spec.imu.a":"100 Hz, 9-axis","spec.imu.b":"1,000 Hz, 9-axis",
+"spec.reads":"Reads","spec.reads.a":"Movement and load","spec.reads.b":"Technique and footwork","spec.batt":"Battery life","spec.water":"Water rating","spec.water.a":"IP67, washable vest",
+"spec.sync":"Sync","spec.sync.v":"Bluetooth, end of session","spec.app":"App",
+"spec.note":"These are the target figures for the pre-production run and may change before manufacturing. Final specifications will be sent to pre-order holders before any payment is taken.",
+"faq.h":"Questions","faq.hr":"Before you pre-order",
+"faq.q1":"Am I charged today?","faq.a1":"No. A pre-order holds your place in the first run and locks in your price. We contact you when orders open to complete payment, and you can cancel before then at no cost and without giving a reason.",
+"faq.q2":"What do they cost?","faq.a2":"The SX-V1 GPS vest is €179 incl. VAT, the SX-B1 band is €60 incl. VAT. The full pack with both is €219 instead of €239. The app is included, with no mandatory subscription for the features described on this page.",
+"faq.q3":"Where do the pro benchmarks come from?","faq.a3":"From data aggregated by sport, position and league level. Every benchmark shown states its source and its sample size. Where we have no reliable reference for a position, we show no gap rather than invent one.",
+"faq.q4":"Do I need both?","faq.a4":"No. Each works on its own and opens its own gaps. The vest answers \"can I hold the tempo of the level above\", the band answers \"is my technique and footwork at that level\". Used together, they let you tell a physical problem from a technical one.",
+"faq.q5":"Can I use it in official matches?","faq.a5":"That depends on your federation and your league. Wearable sensors are governed differently across sports and age groups. Check with your club before using it in competition; training raises no such issue.",
+"faq.q6":"What happens to my data?","faq.a6":"It is yours. You choose whether to share it with your coach, and you can export or delete everything at any time. No performance data is sold to third parties.",
+"faq.q7":"What is the minimum age?","faq.a7":"Sixteen and over. For youth categories, access goes through a club, with parental consent and an adapted dashboard that hides load comparisons unsuited to a growing body.",
+"news.eyebrow":"Not decided yet?","news.title":"Stay<br>informed",
+"news.lede":"Leave your email: one message at launch, with the order date and the final specifications.",
+"news.cta":"Notify me","news.doneT":"You're on the list","news.doneP":"We'll write to you when orders open.","news.legal":"One-click unsubscribe. No data sold.",
+"foot.alert":"Get notified","foot.rights":"© 2026 — All rights reserved",
+"mod.title":"Pre-order","mod.sub":"No payment today. You reserve your place in the first run and lock in your price.",
+"mod.vest.ds":"Movement, load, impacts","mod.band.ds":"Technique, footwork, asymmetry","mod.pack.nm":"Full pack","mod.pack.ds":"Vest + band — save €20",
+"mod.total":"Total reserved","mod.confirm":"Confirm my pre-order","mod.legal":"By confirming, you agree to be contacted when orders open. You can cancel at any time, free of charge.",
+"mod.doneT":"Pre-order recorded",
+"adm.title":"Dashboard","adm.k1":"Pre-orders","adm.k2":"Vests","adm.k3":"Bands","adm.k4":"Packs","adm.k5":"Reserved revenue","adm.k6":"Emails",
+"adm.t1":"Date","adm.t2":"Type","adm.t3":"Email","adm.t4":"Product","adm.t5":"Qty","adm.t6":"Amount","adm.t7":"Sport",
+"adm.csv":"Export CSV","adm.copy":"Copy emails","adm.reset":"Clear all","adm.empty":"No entries yet.",
+"adm.warn":"<b>Prototype.</b> Data is stored in the browser and readable by anyone with this link. Before going live, connect an external service (Formspree, Brevo, Stripe) through the <code>ENDPOINT</code> constant at the top of the script, to stay GDPR-compliant.",
+"js.pre":"Pre-order","js.alert":"Notify","js.sending":"Recording…","js.sending2":"Sending…","js.copied":"Copied","js.confirmDel":"Confirm deletion",
+"js.badMail":"Enter a valid email address so we can reach you.","js.fail":"Recording failed. Please try again in a moment.",
+"js.done":"{q} × {p} — {m} reserved. You are number {n} on the list. Nothing has been charged: we'll write to {e} as soon as orders open."
+},
+de:{
+"nav.how":"Prinzip","nav.prod":"Produkte","nav.gap":"Der Rückstand","nav.spec":"Technik","nav.faq":"FAQ",
+"nav.count":"Vorbestellungen","nav.cta":"Vorbestellen",
+"w.you":"Du","w.pro":"Profi","w.metres":"METER","w.wk":"WO","w.preorder":"Vorbestellen","w.close":"Schließen",
+"w.email":"E-Mail-Adresse","w.emailPh":"du@beispiel.de","w.sport":"Sportart","w.qty":"Menge","w.select":"Auswählen —",
+"m.topspeed":"Höchstgeschwindigkeit","m.shot":"Wurfgeschwindigkeit","m.tackle":"Erfolgreiche Tackles","m.aftercontact":"Meter nach Kontakt","m.asym":"Asymmetrie L/R",
+"app.gaps":"Rückstand","app.drills":"Übungen","ref.top14":"PROFI — TOP 14","ref.hbl":"PROFI — HBL","ref.n2":"PROFI — 2. LIGA",
+"hero.badge":"Vorbestellung offen · Versand Herbst 2026",
+"hero.h1":"Deine Zahlen.<br>Der Rückstand<br>zum Profi.",
+"hero.sub":"Mach aus deinen Felddaten Leistung auf hohem Niveau — mit der Sex-Stats-Plattform.",
+"hero.cta":"Vorbestellen","hero.reassure":"Heute keine Zahlung · Jederzeit stornierbar",
+"hero.counter":"Vorbestellungen<br>eingegangen",
+"hero.foot":"Field stats for amateur athletes.<br>Erste Serie limitiert — die Vorbestellung sichert deinen Platz.",
+"prin.h":"Das Prinzip","prin.hr":"Drei Schritte, keine Umwege","prin.title":"Messen.<br>Vergleichen.<br>Schließen.",
+"prin.lede":"Ein Profi kennt seine Zahlen. Ein Amateur spielt blind. Das ist der einzige Unterschied, an dem du schon im nächsten Training arbeiten kannst.",
+"prin.s1.i":"Schritt 01","prin.s1.n":"Messen","prin.s1.p":"Weste oder Band zeichnet die gesamte Einheit auf: Laufwege, Beschleunigungen, Impacts, technische Aktionen. An deinem Ablauf ändert sich nichts.",
+"prin.s2.i":"Schritt 02","prin.s2.n":"Vergleichen","prin.s2.p":"Jeder Wert wird gegen den Referenzwert des angestrebten Niveaus gestellt — auf deiner Position und in deiner Sportart. Die Quelle steht immer dabei.",
+"prin.s3.i":"Schritt 03","prin.s3.n":"Schließen","prin.s3.p":"Jeder Rückstand öffnet eine gezielte Einheit: Übungen, Umfang, Frequenz und die geschätzte Dauer bis zum Ausgleich. Mehr nicht.",
+"prod.h":"Produkte","prod.hr":"Zwei Sensoren, zwei Sichtweisen","prod.title":"Die Hardware",
+"prod.lede":"Die Weste liest deine Laufwege und deine Belastung. Das Band liest deine Technik und deine Stützaktionen. Zusammen decken sie alles ab, worauf ein Profistab schaut.",
+"prod.priceNote":"inkl. MwSt. · Versand Herbst 2026",
+"prod.vest.tag":"01 — Oberkörper","prod.vest.name":"GPS-Weste","prod.vest.short":"Weste",
+"prod.vest.desc":"Kompressionsstoff ohne Nähte auf der Haut und ein 18 g leichter Pod zwischen den Schulterblättern. Er erfasst jeden gelaufenen Meter, jede Beschleunigung und jeden Zusammenprall — vom ersten Aufwärmen bis zum Schlusspfiff.",
+"prod.vest.f1":"GPS 10 Hz + Multi-GNSS, Inertialsensorik 100 Hz","prod.vest.f2":"Distanz, Höchstgeschwindigkeit, Sprints, Hochintensität, Spielbelastung",
+"prod.vest.f3":"Beschleunigungen, Abbremsungen, Richtungswechsel, Impacts","prod.vest.f4":"Angestrebte Laufzeit 6 h, kabellose Synchronisation nach der Einheit",
+"prod.vest.f5":"Größen XS bis XXL, abnehmbarer Pod, maschinenwaschbar","prod.vest.sports":"Rugby · American Football · Lacrosse · Eishockey · Ultimate",
+"prod.band.tag":"02 — Wade oder Arm","prod.band.name":"Band","prod.band.short":"Band",
+"prod.band.desc":"Zwölf Gramm an Wade oder Bizeps, abgetastet mit 1.000 Hz. Wo die Weste deine Läufe sieht, sieht das Band deine Aktionen: den Wurf, den Pass, den Stützschritt — und den Unterschied zwischen starker und schwacher Seite.",
+"prod.band.f1":"Inertialsensorik 1.000 Hz, gelernte Bewegungserkennung","prod.band.f2":"Würfe, Pässe, Ballkontakte, Ausführungsgeschwindigkeit und -qualität",
+"prod.band.f3":"Stützaktionen, Absprünge, Asymmetrie links / rechts in Prozent","prod.band.f4":"Angestrebte Laufzeit 10 h, Magnetladung, IP67",
+"prod.band.f5":"Ein verstellbarer Gurt, tragbar unter Tape oder Stutzen","prod.band.sports":"Handball · Rugby · Lacrosse · Leichtathletik · Ultimate",
+"pack.title":"Komplettpaket — Weste + Band","pack.note":"Der einzige Weg herauszufinden, ob ein Rückstand aus der Athletik oder aus der Technik kommt.","pack.cta":"Paket vorbestellen",
+"gap.h":"Der Rückstand","gap.hr":"Was du nach der Einheit siehst","gap.title":"Ein Protokoll,<br>kein<br>Newsfeed",
+"gap.profile":"Rugby<br>Dritte Reihe","gap.date":"Einheit 04.09.","gap.k1":"Offene Rückstände","gap.k2":"Laufender Plan","gap.k3":"Zielniveau",
+"gap.linked":"Zugehörige Einheit","gap.linkedTo":"Tackle −23 Pkt.","gap.drillName":"Schulterhöhe & Stellung",
+"gap.d1":"Tackles am Sack, nur Schulter, 4 × 8 je Seite","gap.d2":"Gebremste Annäherung: drei kurze Schritte vor dem Kontakt","gap.d3":"Anti-Rotations-Rumpfarbeit, 3 × 40 s",
+"gap.dur":"35 Min.","gap.freq":"2 × / Woche",
+"gap.p1":"Dein Wert als durchgezogene Linie. Die Referenz des höheren Niveaus gestrichelt. Der Rückstand als Zahl rechts.",
+"gap.p2":"Kein Rückstand ist rot, kein Fortschritt grün. Die Zahl steht einfach da, und der Balken schließt sich sichtbar Woche für Woche. Das ist die einzige Animation der App.",
+"gap.p3":"Jede Referenz ist benannt: Niveau, Position, Liga, Stichprobengröße. Ein Richtwert ohne Herkunft ist wertlos — und du musst ihn deinem Trainer zeigen können.",
+"gap.p4":"Keine Einheit öffnet sich von allein. Sie hängt immer am Rückstand, der sie ausgelöst hat, benannt am Kopf der Karte.",
+"met.h":"Messwerte","met.hr":"Auszug aus einem Spielprotokoll","met.dist":"Distanz","met.sprints":"Sprints","met.hi":"Hochintensität",
+"met.impacts":"Impacts","met.load":"Spielbelastung","met.tech":"Technische Aktionen",
+"met.note":"Beispielwerte aus einem Profil der dritten Reihe. Die angezeigten Kennzahlen ändern sich je nach Sportart und Position.",
+"disc.h":"Sportarten","disc.hr":"Zum Start",
+"disc.note":"Jede Sportart kommt mit eigenen Kennzahlen, Positionen und Referenzwerten. Deine ist nicht dabei? Gib sie bei der Vorbestellung an — das bestimmt die Reihenfolge der nächsten Freischaltungen.",
+"sp.rugby":"Rugby","sp.afl":"American Football","sp.hand":"Handball","sp.track":"Leichtathletik","sp.lax":"Lacrosse","sp.ult":"Ultimate","sp.hockey":"Eishockey","sp.other":"Andere",
+"spec.h":"Technische Daten","spec.hr":"Zielwerte — Vorserie","spec.col1":"Merkmal","spec.col2":"SX-V1 · Weste","spec.col3":"SX-B1 · Band",
+"spec.price":"Vorbestellpreis","spec.wear":"Tragweise","spec.wear.a":"Oberkörper, Rückenpod","spec.wear.b":"Wade oder Bizeps",
+"spec.weight":"Sensorgewicht","spec.pos":"Ortung","spec.pos.b":"Keine — nur inertial","spec.imu":"Inertialsensorik","spec.imu.a":"100 Hz, 9 Achsen","spec.imu.b":"1.000 Hz, 9 Achsen",
+"spec.reads":"Erfasst","spec.reads.a":"Laufwege und Belastung","spec.reads.b":"Technik und Stützaktionen","spec.batt":"Laufzeit","spec.water":"Schutzart","spec.water.a":"IP67, Weste waschbar",
+"spec.sync":"Synchronisation","spec.sync.v":"Bluetooth, nach der Einheit","spec.app":"App",
+"spec.note":"Dies sind die Zielwerte der Vorserie; sie können sich vor der Produktion noch ändern. Die endgültigen Daten gehen vor jeder Zahlung an alle Vorbesteller.",
+"faq.h":"Fragen","faq.hr":"Vor der Vorbestellung",
+"faq.q1":"Wird mir heute etwas abgebucht?","faq.a1":"Nein. Die Vorbestellung sichert deinen Platz in der ersten Serie und friert deinen Preis ein. Wir melden uns zur Bestellöffnung für die Zahlung — bis dahin kannst du kostenlos und ohne Begründung stornieren.",
+"faq.q2":"Was kosten die Produkte?","faq.a2":"Die GPS-Weste SX-V1 kostet 179 € inkl. MwSt., das Band SX-B1 60 € inkl. MwSt. Das Komplettpaket mit beidem kostet 219 € statt 239 €. Die App ist enthalten, ohne Pflichtabo für die auf dieser Seite beschriebenen Funktionen.",
+"faq.q3":"Woher kommen die Profi-Referenzen?","faq.a3":"Aus Daten, aggregiert nach Sportart, Position und Ligaebene. Jede angezeigte Referenz nennt ihre Quelle und ihre Stichprobengröße. Wo wir für eine Position keinen belastbaren Richtwert haben, zeigen wir lieber gar keinen Rückstand als einen erfundenen.",
+"faq.q4":"Brauche ich beide Produkte?","faq.a4":"Nein. Jedes funktioniert für sich und öffnet eigene Rückstände. Die Weste beantwortet „halte ich das Tempo der höheren Liga“, das Band „ist meine Technik auf diesem Niveau“. Gemeinsam trennen sie ein athletisches von einem technischen Problem.",
+"faq.q5":"Darf ich es im Pflichtspiel tragen?","faq.a5":"Das hängt von deinem Verband und deiner Liga ab. Tragbare Sensoren sind je nach Sportart und Altersklasse unterschiedlich geregelt. Kläre es vor dem Wettkampfeinsatz mit deinem Verein; im Training gibt es keine Einschränkung.",
+"faq.q6":"Was passiert mit meinen Daten?","faq.a6":"Sie gehören dir. Du entscheidest, ob du sie mit deinem Trainer teilst, und kannst jederzeit alles exportieren oder löschen. Es werden keine Leistungsdaten an Dritte verkauft.",
+"faq.q7":"Ab welchem Alter?","faq.a7":"Ab 16 Jahren. Für Jugendklassen läuft der Zugang über den Verein, mit Einverständnis der Eltern und einem angepassten Dashboard, das für wachsende Körper ungeeignete Belastungsvergleiche ausblendet.",
+"news.eyebrow":"Noch unentschlossen?","news.title":"Bleib<br>informiert",
+"news.lede":"Hinterlass deine E-Mail: eine einzige Nachricht zum Start, mit dem Bestelltermin und den endgültigen technischen Daten.",
+"news.cta":"Benachrichtigen","news.doneT":"Du bist dabei","news.doneP":"Wir schreiben dir, sobald die Bestellungen öffnen.","news.legal":"Abmeldung mit einem Klick. Keine Datenweitergabe.",
+"foot.alert":"Benachrichtigt werden","foot.rights":"© 2026 — Alle Rechte vorbehalten",
+"mod.title":"Vorbestellen","mod.sub":"Heute keine Zahlung. Du sicherst dir deinen Platz in der ersten Serie und frierst deinen Preis ein.",
+"mod.vest.ds":"Laufwege, Belastung, Impacts","mod.band.ds":"Technik, Stützaktionen, Asymmetrie","mod.pack.nm":"Komplettpaket","mod.pack.ds":"Weste + Band — 20 € gespart",
+"mod.total":"Reservierte Summe","mod.confirm":"Vorbestellung bestätigen","mod.legal":"Mit der Bestätigung stimmst du zu, zur Bestellöffnung kontaktiert zu werden. Jederzeit kostenlos stornierbar.",
+"mod.doneT":"Vorbestellung erfasst",
+"adm.title":"Übersicht","adm.k1":"Vorbestellungen","adm.k2":"Westen","adm.k3":"Bänder","adm.k4":"Pakete","adm.k5":"Reservierter Umsatz","adm.k6":"E-Mails",
+"adm.t1":"Datum","adm.t2":"Typ","adm.t3":"E-Mail","adm.t4":"Produkt","adm.t5":"Menge","adm.t6":"Betrag","adm.t7":"Sportart",
+"adm.csv":"CSV exportieren","adm.copy":"E-Mails kopieren","adm.reset":"Alles löschen","adm.empty":"Noch keine Einträge.",
+"adm.warn":"<b>Prototyp.</b> Die Daten liegen im Browser und sind für jeden mit diesem Link lesbar. Vor dem Livegang einen externen Dienst (Formspree, Brevo, Stripe) über die Konstante <code>ENDPOINT</code> oben im Skript anbinden — DSGVO-konform.",
+"js.pre":"Vorbestellung","js.alert":"Benachrichtigung","js.sending":"Wird erfasst…","js.sending2":"Wird gesendet…","js.copied":"Kopiert","js.confirmDel":"Löschen bestätigen",
+"js.badMail":"Bitte gib eine gültige E-Mail-Adresse an, damit wir dich erreichen.","js.fail":"Speichern fehlgeschlagen. Bitte gleich noch einmal versuchen.",
+"js.done":"{q} × {p} — {m} reserviert. Du bist Nummer {n} auf der Liste. Es wurde nichts abgebucht: Wir schreiben an {e}, sobald die Bestellungen öffnen."
+}};
+
+/* ---------------- moteur i18n ---------------- */
+let LANG = "fr";
+const LOC = { fr:"fr-FR", en:"en-GB", de:"de-DE" };
+const t = k => (T[LANG] && T[LANG][k]) || (T.fr[k]) || k;
+
+function fmtPrix(n){
+  if(LANG === "en") return "€" + n.toLocaleString("en-GB");
+  return n.toLocaleString(LOC[LANG]) + " €";
+}
+const NOMS = () => ({ vest:t("prod.vest.name"), band:t("prod.band.name"), pack:t("mod.pack.nm") });
+
+function appliquer(){
+  document.documentElement.lang = LANG;
+  document.querySelectorAll("[data-i18n]").forEach(e=>{ e.textContent = t(e.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-html]").forEach(e=>{ e.innerHTML = t(e.dataset.i18nHtml); });
+  document.querySelectorAll("[data-i18n-ph]").forEach(e=>{ e.placeholder = t(e.dataset.i18nPh); });
+  document.querySelectorAll("[data-price]").forEach(e=>{
+    const k = e.dataset.price;
+    e.textContent = fmtPrix(k === "sum" ? PRIX.vest + PRIX.band : PRIX[k]);
+  });
+  document.querySelectorAll(".lang button").forEach(b=>b.classList.toggle("on", b.dataset.lang === LANG));
+
+  const sel = document.getElementById("psport");
+  const garde = sel.value;
+  sel.innerHTML = `<option value="">${t("w.select")}</option>` +
+    ["sp.rugby","sp.afl","sp.hand","sp.track","sp.lax","sp.ult","sp.hockey","sp.other"]
+      .map(k=>`<option>${t(k)}</option>`).join("");
+  if(garde) sel.value = garde;
+
+  majOptions();
+  rafraichir();
+  if(adminOv.classList.contains("open")) remplirAdmin();
+}
+
+async function setLang(l, memoriser=true){
+  if(!T[l]) return;
+  LANG = l; appliquer();
+  if(memoriser && hasStore){ try{ await window.storage.set(LKEY, l, false); }catch(e){} }
+}
+
+/* ---------------- données ---------------- */
+let data = { records: [] };
+const hasStore = typeof window !== "undefined" && window.storage && typeof window.storage.get === "function";
+
+async function charger(){
+  if(!hasStore) return;
+  try{
+    const r = await window.storage.get(KEY, true);
+    if(r && r.value) data = typeof r.value === "string" ? JSON.parse(r.value) : r.value;
+    if(!Array.isArray(data.records)) data.records = [];
+  }catch(e){}
+}
+async function sauver(){
+  if(!hasStore) return;
+  try{ await window.storage.set(KEY, JSON.stringify(data), true); }catch(e){ console.error(e); }
+}
+
+const totalPre = () => OFFSET + data.records.filter(r=>r.type==="pre").reduce((s,r)=>s+(r.qty||1),0);
+const parProduit = p => data.records.filter(r=>r.type==="pre"&&r.produit===p).reduce((s,r)=>s+(r.qty||1),0);
+const caTotal = () => data.records.filter(r=>r.type==="pre").reduce((s,r)=>s+(r.montant||0),0);
+
+function animerVers(el, cible){
+  const depart = parseInt(String(el.textContent).replace(/\D/g,""))||0;
+  if(depart===cible || matchMedia("(prefers-reduced-motion: reduce)").matches){ el.textContent = cible; return; }
+  const t0 = performance.now();
+  (function step(ts){
+    const p = Math.min((ts-t0)/700,1), e = 1-Math.pow(1-p,3);
+    el.textContent = Math.round(depart+(cible-depart)*e);
+    if(p<1) requestAnimationFrame(step);
+  })(t0);
+}
+function rafraichir(){
+  const n = totalPre();
+  document.querySelectorAll("[data-count]").forEach(el=>animerVers(el,n));
+  const set=(id,v)=>{const e=document.getElementById(id); if(e) e.textContent=v;};
+  set("kTotal",n); set("kVest",parProduit("vest")); set("kBand",parProduit("band")); set("kPack",parProduit("pack"));
+  set("kCA",fmtPrix(caTotal())); set("kMails",new Set(data.records.map(r=>r.email)).size);
+}
+
+async function enregistrer(rec){
+  if(ENDPOINT){
+    const r = await fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(rec)});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+  }
+  data.records.push(rec); await sauver(); rafraichir();
+}
+
+/* ---------------- modale ---------------- */
+const overlay=document.getElementById("overlay"), form=document.getElementById("preorderForm");
+const pDone=document.getElementById("pDone"), pMsg=document.getElementById("pMsg"), adminOv=document.getElementById("adminOverlay");
+let dernierFocus=null;
+
+function ouvrir(pre){
+  dernierFocus=document.activeElement;
+  overlay.classList.add("open"); document.body.classList.add("locked");
+  form.style.display=""; pDone.classList.remove("show"); pMsg.classList.remove("show");
+  const btn=document.getElementById("pSubmit"); btn.disabled=false; btn.textContent=t("mod.confirm");
+  if(pre){ const r=form.querySelector(`input[value="${pre}"]`); if(r){ r.checked=true; majOptions(); } }
+  setTimeout(()=>document.getElementById("pmail").focus(),60);
+}
+function fermer(){ overlay.classList.remove("open"); document.body.classList.remove("locked"); if(dernierFocus) dernierFocus.focus(); }
+document.querySelectorAll("[data-open-preorder]").forEach(b=>b.addEventListener("click",()=>ouvrir(b.dataset.preselect)));
+document.getElementById("closeModal").addEventListener("click",fermer);
+document.getElementById("pClose2").addEventListener("click",fermer);
+overlay.addEventListener("click",e=>{ if(e.target===overlay) fermer(); });
+document.addEventListener("keydown",e=>{
+  if(e.key!=="Escape") return;
+  if(overlay.classList.contains("open")) fermer();
+  if(adminOv.classList.contains("open")) fermerAdmin();
+});
+
+const produitChoisi = () => form.querySelector('input[name="produit"]:checked').value;
+const qte = () => parseInt(document.getElementById("pqty").value)||1;
+function majOptions(){
+  document.querySelectorAll(".opt").forEach(o=>o.classList.toggle("sel",o.dataset.opt===produitChoisi()));
+  document.getElementById("total").textContent = fmtPrix(PRIX[produitChoisi()]*qte());
+}
+form.querySelectorAll('input[name="produit"]').forEach(r=>r.addEventListener("change",majOptions));
+document.getElementById("plus").addEventListener("click",()=>{const i=document.getElementById("pqty");i.value=Math.min(10,qte()+1);document.getElementById("qtyN").textContent=i.value;majOptions();});
+document.getElementById("minus").addEventListener("click",()=>{const i=document.getElementById("pqty");i.value=Math.max(1,qte()-1);document.getElementById("qtyN").textContent=i.value;majOptions();});
+
+const emailOk = e => /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(String(e).trim());
+
+form.addEventListener("submit",async e=>{
+  e.preventDefault(); pMsg.classList.remove("show");
+  const champ=document.getElementById("pmail"), email=champ.value.trim();
+  if(!emailOk(email)){ pMsg.textContent=t("js.badMail"); pMsg.classList.add("show"); champ.focus(); return; }
+  const btn=document.getElementById("pSubmit"); btn.disabled=true; btn.textContent=t("js.sending");
+  const p=produitChoisi(), q=qte();
+  const rec={type:"pre",email,produit:p,produitNom:NOMS()[p],qty:q,montant:PRIX[p]*q,
+             sport:document.getElementById("psport").value,date:new Date().toISOString()};
+  try{
+    await enregistrer(rec);
+    form.style.display="none";
+    document.getElementById("pDoneTxt").textContent = t("js.done")
+      .replace("{q}",q).replace("{p}",NOMS()[p]).replace("{m}",fmtPrix(rec.montant))
+      .replace("{n}",totalPre()).replace("{e}",email);
+    pDone.classList.add("show");
+  }catch(err){ btn.disabled=false; btn.textContent=t("mod.confirm"); pMsg.textContent=t("js.fail"); pMsg.classList.add("show"); }
+});
+
+/* ---------------- newsletter ---------------- */
+const signup=document.getElementById("signup");
+signup.addEventListener("submit",async e=>{
+  e.preventDefault();
+  const msg=document.getElementById("signupMsg"), champ=document.getElementById("email2"), email=champ.value.trim();
+  msg.classList.remove("show");
+  if(!emailOk(email)){ msg.textContent=t("js.badMail"); msg.classList.add("show"); champ.focus(); return; }
+  const btn=signup.querySelector("button"); btn.disabled=true; btn.textContent=t("js.sending2");
+  try{
+    await enregistrer({type:"alert",email,produit:"",produitNom:"—",qty:0,montant:0,sport:"",date:new Date().toISOString()});
+    signup.style.display="none"; document.getElementById("signupDone").classList.add("show");
+  }catch(err){ btn.disabled=false; btn.textContent=t("news.cta"); msg.textContent=t("js.fail"); msg.classList.add("show"); }
+});
+
+/* ---------------- admin ---------------- */
+function remplirAdmin(){
+  const tb=document.getElementById("adminBody");
+  tb.innerHTML = data.records.length
+    ? data.records.slice().reverse().map(r=>`<tr>
+        <td>${new Date(r.date).toLocaleString(LOC[LANG])}</td>
+        <td>${r.type==="pre"?t("js.pre"):t("js.alert")}</td>
+        <td>${r.email}</td><td>${r.produitNom||"—"}</td>
+        <td>${r.qty||"—"}</td><td>${r.montant?fmtPrix(r.montant):"—"}</td><td>${r.sport||"—"}</td></tr>`).join("")
+    : `<tr><td colspan="7" style="color:var(--acier);padding:1.5rem .8rem">${t("adm.empty")}</td></tr>`;
+  rafraichir();
+}
+function ouvrirAdmin(){ adminOv.classList.add("open"); document.body.classList.add("locked"); remplirAdmin(); }
+function fermerAdmin(){ adminOv.classList.remove("open"); document.body.classList.remove("locked"); if(location.hash==="#admin") history.replaceState(null,"",location.pathname); }
+document.getElementById("adminLink").addEventListener("click",e=>{e.preventDefault();ouvrirAdmin();});
+document.getElementById("closeAdmin").addEventListener("click",fermerAdmin);
+adminOv.addEventListener("click",e=>{ if(e.target===adminOv) fermerAdmin(); });
+if(location.hash==="#admin") setTimeout(ouvrirAdmin,300);
+
+document.getElementById("exportCsv").addEventListener("click",()=>{
+  const l=[[t("adm.t1"),t("adm.t2"),t("adm.t3"),t("adm.t4"),t("adm.t5"),t("adm.t6"),t("adm.t7")]];
+  data.records.forEach(r=>l.push([r.date,r.type,r.email,r.produitNom||"",r.qty||"",r.montant||"",r.sport||""]));
+  const csv="\uFEFF"+l.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(";")).join("\n");
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8;"}));
+  a.download="sexstats-preorders.csv"; a.click(); URL.revokeObjectURL(a.href);
+});
+document.getElementById("copyMails").addEventListener("click",async e=>{
+  const mails=[...new Set(data.records.map(r=>r.email))].join(", ");
+  try{ await navigator.clipboard.writeText(mails); }catch(err){}
+  e.target.textContent=t("js.copied"); setTimeout(()=>e.target.textContent=t("adm.copy"),1600);
+});
+document.getElementById("resetAll").addEventListener("click",async e=>{
+  if(e.target.dataset.sure!=="1"){ e.target.dataset.sure="1"; e.target.textContent=t("js.confirmDel");
+    setTimeout(()=>{e.target.dataset.sure="0";e.target.textContent=t("adm.reset");},4000); return; }
+  data={records:[]}; await sauver(); remplirAdmin(); e.target.dataset.sure="0"; e.target.textContent=t("adm.reset");
+});
+
+document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
+
+/* ---------------- révélation ---------------- */
+const cibles=document.querySelectorAll("[data-reveal]");
+if("IntersectionObserver" in window){
+  const io=new IntersectionObserver(en=>en.forEach(x=>{ if(x.isIntersecting){ x.target.classList.add("in-view"); io.unobserve(x.target); }}),
+    {threshold:.15,rootMargin:"0px 0px -8% 0px"});
+  cibles.forEach(c=>io.observe(c));
+}else cibles.forEach(c=>c.classList.add("in-view"));
+
+/* ---------------- démarrage ---------------- */
+(async()=>{
+  let choix = null;
+  const url = new URLSearchParams(location.search).get("lang");
+  if(url && T[url]) choix = url;
+  if(!choix && hasStore){ try{ const r=await window.storage.get(LKEY,false); if(r&&r.value&&T[r.value]) choix=r.value; }catch(e){} }
+  if(!choix){ const n=(navigator.language||"fr").slice(0,2).toLowerCase(); choix = T[n] ? n : "en"; }
+  await charger();
+  await setLang(choix, false);
+})();
+</script>
+
+</body>
+</html>
